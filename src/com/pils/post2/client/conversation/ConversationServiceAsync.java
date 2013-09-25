@@ -1,4 +1,4 @@
-package com.pils.post2.client;
+package com.pils.post2.client.conversation;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

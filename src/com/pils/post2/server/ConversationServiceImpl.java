@@ -1,7 +1,7 @@
 package com.pils.post2.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.pils.post2.client.ConversationService;
+import com.pils.post2.client.conversation.ConversationService;
 
 public class ConversationServiceImpl extends RemoteServiceServlet implements ConversationService {
 	public String getMessage(String msg) {
