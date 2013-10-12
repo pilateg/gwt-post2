@@ -5,6 +5,10 @@
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
+	<display-name>Post2</display-name>
+	<welcome-file-list>
+		<welcome-file>Post2.html</welcome-file>
+	</welcome-file-list>
 	<servlet>
 		<servlet-name>ConversationService</servlet-name>
 		<servlet-class>com.pils.post2.server.ConversationServiceImpl</servlet-class>

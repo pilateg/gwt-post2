@@ -12,8 +12,4 @@ public class UiBlockHandler extends DockLayoutPanel {
 	public UiBlockHandler(Style.Unit unit) {
 		super(unit);
 	}
-
-	public void addUiBlock(UiBlock block) {
-		add(block);
-	}
 }

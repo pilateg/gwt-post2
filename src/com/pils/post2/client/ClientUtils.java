@@ -3,8 +3,9 @@ package com.pils.post2.client;
 public class ClientUtils {
 
 	public static void log(Object... args) {
-		for (Object o : args)
-			log(o);
+		if (isSupported())
+			for (Object o : args)
+				log(o);
 	}
 
 	private static native boolean isSupported() /*-{

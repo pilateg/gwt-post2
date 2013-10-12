@@ -1,0 +1,9 @@
+@def backColor #cce;
+@def borderColor #445;
+
+.block {
+	background: backColor;
+	border: borderColor solid 1px;
+	border-radius: 3px;
+	padding: 4px;
+}
