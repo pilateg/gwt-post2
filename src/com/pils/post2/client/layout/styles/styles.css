@@ -1,9 +1,14 @@
 @def backColor #cce;
 @def borderColor #445;
 
-.block {
+.block, .entityLink {
 	background: backColor;
 	border: borderColor solid 1px;
 	border-radius: 3px;
 	padding: 4px;
+}
+
+.entityLink {
+	background: borderColor;
+	border-radius: 5px;
 }

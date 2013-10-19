@@ -32,7 +32,6 @@ class LoginBlock extends UiBlock {
 
 	public LoginBlock() {
 		initWidget(uiBinder.createAndBindUi(this));
-		Resources.INSTANCE.css().ensureInjected();
 		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		name.getElement().setAttribute("placeholder", "name");
 		pass.getElement().setAttribute("placeholder", "pass");
