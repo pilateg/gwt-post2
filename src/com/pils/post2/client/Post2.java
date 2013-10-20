@@ -22,7 +22,7 @@ public class Post2 implements EntryPoint {
 		east.addNorth(BlockFactory.getInstance().getCategoriesBlock(), 200);
 		blockHandler.addEast(east, 200);
 		DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
-		center.addNorth(BlockFactory.getInstance().getBreadcrumbBlock(), 100);
+		center.addNorth(BlockFactory.getInstance().getBreadcrumbBlock(), 30);
 		center.addSouth(BlockFactory.getInstance().getNavigationBlock(), 100);
 		center.add(BlockFactory.getInstance().getContentBlock());
 		blockHandler.add(center);
