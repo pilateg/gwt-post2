@@ -8,7 +8,7 @@ import com.pils.post2.client.layout.UiBlock;
 public class NavigationBlock extends UiBlock {
 	public NavigationBlock() {
 		FlowPanel mainPanel = GWT.create(FlowPanel.class);
-		mainPanel.addStyleName(Resources.INSTANCE.css().entityLink());
+		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		initWidget(mainPanel);
 	}
 }

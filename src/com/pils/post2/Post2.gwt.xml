@@ -6,6 +6,8 @@
 
 	<set-property name="user.agent" value="opera"/>
 
+	<set-configuration-property name="CssResource.style" value="pretty"/>
+
 	<entry-point class='com.pils.post2.client.Post2'/>
 
 	<servlet path='/Post2Service' class='com.pils.post2.server.ConversationServiceImpl'/>

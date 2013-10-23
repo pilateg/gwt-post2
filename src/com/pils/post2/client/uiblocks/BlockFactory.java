@@ -45,4 +45,8 @@ public class BlockFactory {
 	public UiBlock getNavigationBlock() {
 		return GWT.create(NavigationBlock.class);
 	}
+
+	public UiBlock getEntityLinkBlock() {
+		return GWT.create(EntityLinkBlock.class);
+	}
 }

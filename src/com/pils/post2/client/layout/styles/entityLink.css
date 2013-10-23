@@ -1,0 +1,12 @@
+@def borderColor #445;
+
+.entityLink {
+	background: borderColor;
+	border-radius: 5px;
+	border: borderColor solid 1px;
+	padding: 4px;
+}
+
+.entityLink, .entityLink > * {
+	height: 20px;
+}

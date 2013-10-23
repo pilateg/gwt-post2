@@ -9,7 +9,7 @@ import com.pils.post2.client.layout.UiBlock;
 public class EntryBlock extends UiBlock {
 	public EntryBlock() {
 		FlowPanel mainPanel = GWT.create(FlowPanel.class);
-		mainPanel.addStyleName(Resources.INSTANCE.css().entityLink());
+		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		Label title = GWT.create(Label.class);
 		mainPanel.add(title);
 		initWidget(mainPanel);

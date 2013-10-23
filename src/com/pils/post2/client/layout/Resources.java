@@ -13,7 +13,5 @@ public interface Resources extends ClientBundle {
 	public interface Css extends CssResource {
 		@ClassName("block")
 		String block();
-
-		String entityLink();
 	}
 }

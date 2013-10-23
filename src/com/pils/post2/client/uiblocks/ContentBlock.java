@@ -2,7 +2,6 @@ package com.pils.post2.client.uiblocks;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public class ContentBlock extends UiBlock {
 
 	public ContentBlock() {
 		FlowPanel mainPanel = GWT.create(FlowPanel.class);
-		mainPanel.addStyleName(Resources.INSTANCE.css().entityLink());
+		mainPanel.addStyleName(EntityLinkBlock.EntityLinkResources.INSTANCE.css().entityLink());
 		mainPanel.add(breadcrumb);
 		for (EntryBlock entry : entries)
 			mainPanel.add(entry);
