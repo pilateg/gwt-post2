@@ -5,7 +5,7 @@ public class ClientUtils {
 	public static void log(Object... args) {
 		if (isSupported())
 			for (Object o : args)
-				log(o);
+				jsLog(o);
 	}
 
 	private static native boolean isSupported() /*-{
@@ -14,7 +14,7 @@ public class ClientUtils {
           (typeof(window.console.log) == 'function'));
   }-*/;
 
-	private static native void log(Object message) /*-{
+	private static native void jsLog(Object message) /*-{
       window.console.log(message);
   }-*/;
 }
