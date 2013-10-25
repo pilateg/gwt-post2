@@ -7,10 +7,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.pils.post2.client.conversation.dto.Tag;
 import com.pils.post2.client.layout.UiBlockHandler;
-import com.pils.post2.client.uiblocks.BlockFactory;
-import com.pils.post2.client.uiblocks.BreadcrumbBlock;
-import com.pils.post2.client.uiblocks.CategoriesBlock;
-import com.pils.post2.client.uiblocks.EntityLinkBlock;
+import com.pils.post2.client.uiblocks.*;
 
 public class Post2 implements EntryPoint {
 	private UiBlockHandler blockHandler = GWT.create(UiBlockHandler.class);
@@ -36,7 +33,17 @@ public class Post2 implements EntryPoint {
 		breadcrumb.addBreadcrumb(entityLink);
 		breadcrumb.addBreadcrumb(entityLink2);
 		center.addNorth(breadcrumb, 40);
-		center.addSouth(BlockFactory.getInstance().getNavigationBlock(), 100);
+		NavigationBlock navigation = (NavigationBlock) BlockFactory.getInstance().getNavigationBlock();
+		navigation.setUp(100, 3);
+		navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
+			@Override
+			public void onPageSelected(int pageNumber, int itemsOnPage) {
+				//int offset = pageNumber*itemsOnPage;
+				//((ContentBlock) BlockFactory.getInstance().getContentBlock()).update(pageNumber*itemsOnPage, itemsOnPage);
+			}
+		});
+		navigation.setCurrentPage(0);
+		center.addSouth(navigation, 100);
 		center.add(BlockFactory.getInstance().getContentBlock());
 		blockHandler.add(center);
 

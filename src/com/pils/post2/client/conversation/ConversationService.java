@@ -8,8 +8,11 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface ConversationService extends RemoteService {
 	String getMessage(String msg);
 
-	public static class App {
+	class App {
 		private static ConversationServiceAsync ourInstance = GWT.create(ConversationService.class);
+
+		private App() {
+		}
 
 		public static synchronized ConversationServiceAsync getInstance() {
 			return ourInstance;

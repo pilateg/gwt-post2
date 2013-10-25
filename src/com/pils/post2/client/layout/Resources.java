@@ -10,7 +10,7 @@ public interface Resources extends ClientBundle {
 	@Source("styles/styles.css")
 	Css css();
 
-	public interface Css extends CssResource {
+	interface Css extends CssResource {
 		@ClassName("block")
 		String block();
 	}
