@@ -1,0 +1,25 @@
+@eval buttonWidth "30px";
+@eval doubleButtonWidth "60px";
+
+.mainPanel {
+	height: 20px;
+}
+
+.scroll {
+	position: absolute;
+	left: doubleButtonWidth;
+	right: doubleButtonWidth;
+}
+
+.leftButton, .rightButton {
+	position: relative;
+	width: buttonWidth;
+}
+
+.leftButton {
+	float: left;
+}
+
+.rightButton {
+	float: right;
+}

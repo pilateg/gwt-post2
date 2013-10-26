@@ -1,7 +1,10 @@
 package com.pils.post2.client.uiblocks;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -24,17 +27,24 @@ public class NavigationBlock extends UiBlock {
 	public NavigationBlock() {
 		FlowPanel mainPanel = new FlowPanel();
 		initWidget(mainPanel);
+		NavigationResources.INSTANCE.css().ensureInjected();
 		mainPanel.addStyleName(Resources.INSTANCE.css().block());
+		mainPanel.addStyleName(NavigationResources.INSTANCE.css().mainPanel());
 		first = new Button("<<");
+		first.addStyleName(NavigationResources.INSTANCE.css().leftButton());
 		mainPanel.add(first);
 		previous = new Button("<");
+		previous.addStyleName(NavigationResources.INSTANCE.css().leftButton());
 		mainPanel.add(previous);
 		panel = new FlowPanel();
 		ScrollPanel scrollPanel = new ScrollPanel(panel);
+		scrollPanel.addStyleName(NavigationResources.INSTANCE.css().scroll());
 		mainPanel.add(scrollPanel);
 		next = new Button(">");
+		next.addStyleName(NavigationResources.INSTANCE.css().rightButton());
 		mainPanel.add(next);
 		last = new Button(">>");
+		last.addStyleName(NavigationResources.INSTANCE.css().rightButton());
 		mainPanel.add(last);
 	}
 
@@ -97,7 +107,8 @@ public class NavigationBlock extends UiBlock {
 
 	public void setCurrentPage(int page) {
 		if (currentPage != page) {
-			setButtonEnabled((Button) panel.getWidget(currentPage), true);
+			if (currentPage != -1)
+				setButtonEnabled((Button) panel.getWidget(currentPage), true);
 			setButtonEnabled((Button) panel.getWidget(page), false);
 			currentPage = page;
 			setButtonEnabled(first, currentPage != 0);
@@ -121,5 +132,22 @@ public class NavigationBlock extends UiBlock {
 
 	public interface PageSelectionHandler {
 		void onPageSelected(int pageNumber, int itemsOnPage);
+	}
+
+	public interface NavigationResources extends ClientBundle {
+		NavigationResources INSTANCE = GWT.create(NavigationResources.class);
+
+		@Source("../layout/styles/navigation.css")
+		Css css();
+
+		public interface Css extends CssResource {
+			String scroll();
+
+			String leftButton();
+
+			String rightButton();
+
+			String mainPanel();
+		}
 	}
 }
