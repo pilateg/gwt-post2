@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:w='urn:import:com.pils.post2.client.layout.widgets'>
 	<ui:style>
 		.mainPanel {
 			position: relative;
@@ -14,7 +15,7 @@
 	<g:FlowPanel ui:field="mainPanel" styleName="{style.mainPanel}">
 		<g:TextBox ui:field="name"/>
 		<g:TextBox ui:field="pass"/>
-		<g:Button ui:field="loginButton"/>
-		<g:Button ui:field="registerButton"/>
+		<w:Button ui:field="loginButton"/>
+		<w:Button ui:field="registerButton"/>
 	</g:FlowPanel>
 </ui:UiBinder>

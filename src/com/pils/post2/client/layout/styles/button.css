@@ -1,0 +1,20 @@
+.button {
+	display: inline-block;
+	padding: 1px 6px;
+	text-align: center;
+	white-space: nowrap;
+	border-radius: 3px;
+	border: #000 solid 1px;
+	cursor: pointer;
+	color: #000;
+	background: #fff;
+}
+
+.button:active {
+	background: #def;
+}
+
+.disabled {
+	color: #999;
+	cursor: default;
+}

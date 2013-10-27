@@ -5,11 +5,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
+import com.pils.post2.client.layout.widgets.Button;
 
 public class NavigationBlock extends UiBlock {
 	private int itemsNumber;
