@@ -6,8 +6,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
 
@@ -18,6 +18,8 @@ public class NavigationBlock extends UiBlock {
 	private int currentPage = -1;
 
 	private PageSelectionHandler clickHandler;
+	private HorizontalPanel mainPanel;
+	private ScrollPanel scrollPanel;
 	private FlowPanel panel;
 	private Button first;
 	private Button previous;
@@ -25,27 +27,25 @@ public class NavigationBlock extends UiBlock {
 	private Button last;
 
 	public NavigationBlock() {
-		FlowPanel mainPanel = new FlowPanel();
+		mainPanel = new HorizontalPanel();
 		initWidget(mainPanel);
 		NavigationResources.INSTANCE.css().ensureInjected();
-		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		mainPanel.addStyleName(NavigationResources.INSTANCE.css().mainPanel());
-		first = new Button("<<");
-		first.addStyleName(NavigationResources.INSTANCE.css().leftButton());
-		mainPanel.add(first);
-		previous = new Button("<");
-		previous.addStyleName(NavigationResources.INSTANCE.css().leftButton());
-		mainPanel.add(previous);
+		first = addButton("<<", NavigationResources.INSTANCE.css().leftButton(), "30px");
+		previous = addButton("<", NavigationResources.INSTANCE.css().leftButton(), "30px");
 		panel = new FlowPanel();
-		ScrollPanel scrollPanel = new ScrollPanel(panel);
-		scrollPanel.addStyleName(NavigationResources.INSTANCE.css().scroll());
+		scrollPanel = new ScrollPanel(panel);
 		mainPanel.add(scrollPanel);
-		next = new Button(">");
-		next.addStyleName(NavigationResources.INSTANCE.css().rightButton());
-		mainPanel.add(next);
-		last = new Button(">>");
-		last.addStyleName(NavigationResources.INSTANCE.css().rightButton());
-		mainPanel.add(last);
+		next = addButton(">", NavigationResources.INSTANCE.css().rightButton(), "30px");
+		last = addButton(">>", NavigationResources.INSTANCE.css().rightButton(), "30px");
+	}
+
+	private Button addButton(String text, String className, String width) {
+		Button button = new Button(text);
+		button.addStyleName(className);
+		mainPanel.add(button);
+		mainPanel.setCellWidth(button, width);
+		return button;
 	}
 
 	public void setUp(int itemsNumber, int itemsOnPage) {
@@ -61,6 +61,7 @@ public class NavigationBlock extends UiBlock {
 		panel.clear();
 		for (int i = 0; i < pagesNumber; ++i) {
 			final Button button = new Button(String.valueOf(i + 1));
+			button.getElement().getStyle().setProperty("display", "table-cell");
 			final int finalI = i;
 			button.addClickHandler(new ClickHandler() {
 				@Override
@@ -111,6 +112,7 @@ public class NavigationBlock extends UiBlock {
 				setButtonEnabled((Button) panel.getWidget(currentPage), true);
 			setButtonEnabled((Button) panel.getWidget(page), false);
 			currentPage = page;
+			scrollPanel.ensureVisible(panel.getWidget(currentPage));
 			setButtonEnabled(first, currentPage != 0);
 			setButtonEnabled(previous, currentPage != 0);
 			setButtonEnabled(next, currentPage != pagesNumber - 1);
@@ -141,8 +143,6 @@ public class NavigationBlock extends UiBlock {
 		Css css();
 
 		public interface Css extends CssResource {
-			String scroll();
-
 			String leftButton();
 
 			String rightButton();

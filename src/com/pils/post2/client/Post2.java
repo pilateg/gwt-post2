@@ -34,7 +34,7 @@ public class Post2 implements EntryPoint {
 		breadcrumb.addBreadcrumb(entityLink2);
 		center.addNorth(breadcrumb, 40);
 		NavigationBlock navigation = (NavigationBlock) BlockFactory.getInstance().getNavigationBlock();
-		navigation.setUp(100, 3);
+		navigation.setUp(1000, 2);
 		navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
 			@Override
 			public void onPageSelected(int pageNumber, int itemsOnPage) {

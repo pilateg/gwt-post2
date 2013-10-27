@@ -8,13 +8,14 @@
 	cursor: pointer;
 	color: #000;
 	background: #fff;
+	box-sizing: border-box;
 }
 
 .button:active {
 	background: #def;
 }
 
-.disabled {
+.disabled, .disabled:active {
 	color: #999;
 	cursor: default;
 }

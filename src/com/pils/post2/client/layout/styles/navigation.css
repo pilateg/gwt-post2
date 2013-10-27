@@ -1,14 +1,10 @@
 @eval buttonWidth "30px";
-@eval doubleButtonWidth "60px";
 
 .mainPanel {
-	height: 20px;
-}
-
-.scroll {
-	position: absolute;
-	left: doubleButtonWidth;
-	right: doubleButtonWidth;
+	width: 100%;
+	height: 40px;
+	padding: 0 4px;
+	table-layout: fixed;
 }
 
 .leftButton, .rightButton {
