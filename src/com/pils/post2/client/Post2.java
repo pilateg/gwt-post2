@@ -33,16 +33,16 @@ public class Post2 implements EntryPoint {
 		breadcrumb.addBreadcrumb(entityLink);
 		breadcrumb.addBreadcrumb(entityLink2);
 		center.addNorth(breadcrumb, 40);
-    NavigationBlock navigation = (NavigationBlock) BlockFactory.getInstance().getNavigationBlock();
-    navigation.setUp(100, 3);
-    navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
-      @Override
-      public void onPageSelected(int pageNumber, int itemsOnPage) {
-        //int offset = pageNumber*itemsOnPage;
-        //((ContentBlock) BlockFactory.getInstance().getContentBlock()).update(pageNumber*itemsOnPage, itemsOnPage);
-      }
-    });
-    navigation.setCurrentPage(0);
+		NavigationBlock navigation = (NavigationBlock) BlockFactory.getInstance().getNavigationBlock();
+		navigation.setUp(1000, 2);
+		navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
+			@Override
+			public void onPageSelected(int pageNumber, int itemsOnPage) {
+				//int offset = pageNumber*itemsOnPage;
+				//((ContentBlock) BlockFactory.getInstance().getContentBlock()).update(pageNumber*itemsOnPage, itemsOnPage);
+			}
+		});
+		navigation.setCurrentPage(0);
 		center.addSouth(navigation, 100);
 		center.add(BlockFactory.getInstance().getContentBlock());
 		blockHandler.add(center);

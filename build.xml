@@ -43,7 +43,7 @@
 				<pathelement location="${gwt.sdk}/validation-api-1.0.0.GA-sources.jar"/>
 			</classpath>
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
-			<jvmarg value="-Xmx256M"/>
+			<jvmarg value="-Xmx512M"/>
 			<arg line="-war"/>
 			<arg value="${out.dir}"/>
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->

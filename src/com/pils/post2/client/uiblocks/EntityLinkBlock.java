@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.*;
 import com.pils.post2.client.conversation.dto.Entity;
 import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
+import com.pils.post2.client.layout.widgets.Button;
 
 public class EntityLinkBlock extends UiBlock {
 	private Entity entity;

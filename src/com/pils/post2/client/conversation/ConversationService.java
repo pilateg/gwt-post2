@@ -11,8 +11,8 @@ public interface ConversationService extends RemoteService {
 	class App {
 		private static ConversationServiceAsync ourInstance = GWT.create(ConversationService.class);
 
-    private App() {
-    }
+		private App() {
+		}
 
 		public static synchronized ConversationServiceAsync getInstance() {
 			return ourInstance;
