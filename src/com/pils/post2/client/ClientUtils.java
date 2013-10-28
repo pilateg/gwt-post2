@@ -2,6 +2,9 @@ package com.pils.post2.client;
 
 public class ClientUtils {
 
+	private ClientUtils() {
+	}
+
 	public static void log(Object... args) {
 		if (isSupported())
 			for (Object o : args)

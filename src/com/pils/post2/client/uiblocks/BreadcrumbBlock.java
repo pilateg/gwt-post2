@@ -7,11 +7,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.pils.post2.client.layout.UiBlock;
 
 public class BreadcrumbBlock extends UiBlock {
-	private FlowPanel mainPanel;
+	private FlowPanel mainPanel = GWT.create(FlowPanel.class);
 
 	public BreadcrumbBlock() {
 		BreadcrumbResources.INSTANCE.css().ensureInjected();
-		mainPanel = GWT.create(FlowPanel.class);
 		mainPanel.addStyleName(BreadcrumbResources.INSTANCE.css().block());
 		initWidget(mainPanel);
 	}
@@ -35,7 +34,7 @@ public class BreadcrumbBlock extends UiBlock {
 		@Source("../layout/styles/breadcrumb.css")
 		Css css();
 
-		public interface Css extends CssResource {
+		interface Css extends CssResource {
 			String block();
 		}
 	}

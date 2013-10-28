@@ -10,10 +10,9 @@ import java.util.List;
 
 public class CategoriesBlock extends UiBlock {
 	private List<EntityLinkBlock> categories = new ArrayList<EntityLinkBlock>();
-	private FlowPanel mainPanel;
+	private FlowPanel mainPanel = GWT.create(FlowPanel.class);
 
 	public CategoriesBlock() {
-		mainPanel = GWT.create(FlowPanel.class);
 		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		initWidget(mainPanel);
 	}

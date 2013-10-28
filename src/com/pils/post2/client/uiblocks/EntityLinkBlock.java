@@ -13,14 +13,13 @@ import com.pils.post2.client.layout.widgets.Button;
 
 public class EntityLinkBlock extends UiBlock {
 	private Entity entity;
-
-	private Hyperlink link;
+	private Hyperlink link = GWT.create(Hyperlink.class);
 
 	public EntityLinkBlock() {
-		FlowPanel mainPanel = GWT.create(FlowPanel.class);
+		FlowPanel mainPanel = new FlowPanel();
 		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		mainPanel.addStyleName(EntityLinkResources.INSTANCE.css().entityLink());
-		final Button options = GWT.create(Button.class);
+		final Button options = new Button();
 		options.setText("o");
 		final PopupPanel popup = new PopupPanel();
 		popup.setAutoHideEnabled(true);
@@ -42,7 +41,6 @@ public class EntityLinkBlock extends UiBlock {
 			}
 		});
 		mainPanel.add(options);
-		link = GWT.create(Hyperlink.class);
 		mainPanel.add(link);
 		initWidget(mainPanel);
 	}
@@ -58,7 +56,7 @@ public class EntityLinkBlock extends UiBlock {
 		@Source("../layout/styles/entityLink.css")
 		Css css();
 
-		public interface Css extends CssResource {
+		interface Css extends CssResource {
 			String entityLink();
 		}
 	}
