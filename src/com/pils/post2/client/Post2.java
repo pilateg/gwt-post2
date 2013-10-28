@@ -6,34 +6,34 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.pils.post2.client.conversation.dto.Tag;
-import com.pils.post2.client.layout.UiBlockHandler;
 import com.pils.post2.client.uiblocks.*;
 
 public class Post2 implements EntryPoint {
-	private UiBlockHandler blockHandler = GWT.create(UiBlockHandler.class);
+	private DockLayoutPanel blockHandler = GWT.create(DockLayoutPanel.class);
 
 	public void onModuleLoad() {
 		RootLayoutPanel.get().add(blockHandler);
 
 		DockLayoutPanel east = new DockLayoutPanel(Style.Unit.PX);
-		east.addNorth(BlockFactory.getInstance().getLoginBlock(), 200);
-		east.addNorth(BlockFactory.getInstance().getSearchBlock(), 200);
-		((CategoriesBlock) BlockFactory.getInstance().getCategoriesBlock()).setCategories(null);
-		east.addNorth(BlockFactory.getInstance().getCategoriesBlock(), 200);
+		east.addNorth(new LoginBlock(), 200);
+		east.addNorth(new SearchBlock(), 200);
+    CategoriesBlock categoriesBlock = new CategoriesBlock();
+		categoriesBlock.setCategories(null);
+		east.addNorth(categoriesBlock, 200);
 		blockHandler.addEast(east, 200);
 		DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
-		EntityLinkBlock entityLink = (EntityLinkBlock) BlockFactory.getInstance().getEntityLinkBlock();
+		EntityLinkBlock entityLink = new EntityLinkBlock();
 		Tag tag = new Tag();
 		tag.setName("tag_name");
 		entityLink.setEntity(tag);
-		EntityLinkBlock entityLink2 = (EntityLinkBlock) BlockFactory.getInstance().getEntityLinkBlock();
+		EntityLinkBlock entityLink2 = new EntityLinkBlock();
 		tag.setName("tag_name2");
 		entityLink2.setEntity(tag);
-		BreadcrumbBlock breadcrumb = (BreadcrumbBlock) BlockFactory.getInstance().getBreadcrumbBlock();
+		BreadcrumbBlock breadcrumb = new BreadcrumbBlock();
 		breadcrumb.addBreadcrumb(entityLink);
 		breadcrumb.addBreadcrumb(entityLink2);
 		center.addNorth(breadcrumb, 40);
-		NavigationBlock navigation = (NavigationBlock) BlockFactory.getInstance().getNavigationBlock();
+		NavigationBlock navigation = new NavigationBlock();
 		navigation.setUp(1000, 2);
 		navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
 			@Override
@@ -44,7 +44,7 @@ public class Post2 implements EntryPoint {
 		});
 		navigation.setCurrentPage(0);
 		center.addSouth(navigation, 100);
-		center.add(BlockFactory.getInstance().getContentBlock());
+		center.add(new ContentBlock());
 		blockHandler.add(center);
 
 	}

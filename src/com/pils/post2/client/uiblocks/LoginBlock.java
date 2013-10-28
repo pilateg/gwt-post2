@@ -14,7 +14,7 @@ import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
 
-class LoginBlock extends UiBlock {
+public class LoginBlock extends UiBlock {
 	interface LoginBlockUiBinder extends UiBinder<FlowPanel, LoginBlock> {}
 
 	private static LoginBlockUiBinder uiBinder = GWT.create(LoginBlockUiBinder.class);

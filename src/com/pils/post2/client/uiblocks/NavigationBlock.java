@@ -142,7 +142,7 @@ public class NavigationBlock extends UiBlock {
 		@Source("../layout/styles/navigation.css")
 		Css css();
 
-		public interface Css extends CssResource {
+		interface Css extends CssResource {
 			String leftButton();
 
 			String rightButton();

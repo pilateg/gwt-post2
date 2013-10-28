@@ -41,7 +41,7 @@ public class Button extends FocusWidget {
 		@Source("../styles/button.css")
 		Css css();
 
-		public interface Css extends CssResource {
+		interface Css extends CssResource {
 			String button();
 
 			String disabled();
