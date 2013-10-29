@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesBlock extends UiBlock {
-	private List<EntityLinkBlock> categories = new ArrayList<EntityLinkBlock>();
 	private FlowPanel mainPanel = GWT.create(FlowPanel.class);
 
 	public CategoriesBlock() {
@@ -18,7 +17,6 @@ public class CategoriesBlock extends UiBlock {
 	}
 
 	public void setCategories(List<EntityLinkBlock> categories) {
-		this.categories = categories;
 		if (categories != null)
 			for (EntityLinkBlock entity : categories)
 				mainPanel.add(entity);

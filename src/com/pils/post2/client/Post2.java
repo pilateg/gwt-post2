@@ -8,30 +8,33 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.pils.post2.client.conversation.dto.Tag;
 import com.pils.post2.client.uiblocks.*;
 
-public class Post2 implements EntryPoint {
-	private DockLayoutPanel blockHandler = GWT.create(DockLayoutPanel.class);
+import java.util.ArrayList;
+import java.util.List;
 
+public class Post2 implements EntryPoint {
 	public void onModuleLoad() {
+		DockLayoutPanel blockHandler = new DockLayoutPanel(Style.Unit.PX);
 		RootLayoutPanel.get().add(blockHandler);
 
 		DockLayoutPanel east = new DockLayoutPanel(Style.Unit.PX);
 		east.addNorth(new LoginBlock(), 200);
 		east.addNorth(new SearchBlock(), 200);
+		Tag tag = new Tag();
+		final List<EntityLinkBlock> entities = new ArrayList<EntityLinkBlock>();
+		for (int i = 0; i <4; ++i) {
+			EntityLinkBlock entityLink = new EntityLinkBlock();
+			tag.setName("tag_name" + i);
+			entityLink.setEntity(tag);
+			entities.add(entityLink);
+		}
     CategoriesBlock categoriesBlock = new CategoriesBlock();
-		categoriesBlock.setCategories(null);
+		categoriesBlock.setCategories(new ArrayList<EntityLinkBlock>(){{add(entities.get(2)); add(entities.get(4));}});
 		east.addNorth(categoriesBlock, 200);
 		blockHandler.addEast(east, 200);
 		DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
-		EntityLinkBlock entityLink = new EntityLinkBlock();
-		Tag tag = new Tag();
-		tag.setName("tag_name");
-		entityLink.setEntity(tag);
-		EntityLinkBlock entityLink2 = new EntityLinkBlock();
-		tag.setName("tag_name2");
-		entityLink2.setEntity(tag);
 		BreadcrumbBlock breadcrumb = new BreadcrumbBlock();
-		breadcrumb.addBreadcrumb(entityLink);
-		breadcrumb.addBreadcrumb(entityLink2);
+		breadcrumb.addBreadcrumb(entities.get(0));
+		breadcrumb.addBreadcrumb(entities.get(1));
 		center.addNorth(breadcrumb, 40);
 		NavigationBlock navigation = new NavigationBlock();
 		navigation.setUp(1000, 2);
