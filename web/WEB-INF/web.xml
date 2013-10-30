@@ -17,4 +17,17 @@
 		<servlet-name>ConversationService</servlet-name>
 		<url-pattern>/Post2/Post2Service</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+	  <servlet-name>remoteLogging</servlet-name>
+	  <servlet-class>com.pils.post2.server.LoggingServlet</servlet-class>
+		<init-param>
+			<param-name>symbolMaps</param-name>
+			<param-value>Post2/symbolMaps</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>remoteLogging</servlet-name>
+	  <url-pattern>/Post2/remote_logging</url-pattern>
+	</servlet-mapping>
 </web-app>
