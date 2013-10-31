@@ -13,6 +13,11 @@ public class Tag extends Entity {
 		return name;
 	}
 
+	@Override
+	public String getDescription() {
+		return "";
+	}
+
 	public String getName() {
 		return name;
 	}

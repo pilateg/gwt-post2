@@ -13,9 +13,9 @@ import com.pils.post2.client.layout.widgets.Button;
 
 public class EntityLinkBlock extends UiBlock {
 	private Entity entity;
-	private Hyperlink link = GWT.create(Hyperlink.class);
+	private Anchor link = GWT.create(Anchor.class);
 
-	public EntityLinkBlock() {
+	public EntityLinkBlock(Entity e) {
 		FlowPanel mainPanel = new FlowPanel();
 		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		mainPanel.addStyleName(EntityLinkResources.INSTANCE.css().entityLink());
@@ -43,11 +43,12 @@ public class EntityLinkBlock extends UiBlock {
 		mainPanel.add(options);
 		mainPanel.add(link);
 		initWidget(mainPanel);
+		entity = e;
+		link.setText(entity.toString());
 	}
 
-	public void setEntity(Entity entity) {
-		this.entity = entity;
-		link.setText(entity.toString());
+	public void setClickHandler(ClickHandler handler) {
+		link.addClickHandler(handler);
 	}
 
 	public interface EntityLinkResources extends ClientBundle {

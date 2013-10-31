@@ -67,7 +67,6 @@ public class NavigationBlock extends UiBlock {
 				@Override
 				public void onClick(ClickEvent event) {
 					setCurrentPage(finalI);
-					clickHandler.onPageSelected(currentPage, itemsOnPage);
 				}
 			});
 			panel.add(button);
@@ -80,28 +79,24 @@ public class NavigationBlock extends UiBlock {
 			@Override
 			public void onClick(ClickEvent event) {
 				setCurrentPage(0);
-				handler.onPageSelected(currentPage, itemsOnPage);
 			}
 		});
 		previous.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				setCurrentPage(currentPage - 1);
-				handler.onPageSelected(currentPage, itemsOnPage);
 			}
 		});
 		next.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				setCurrentPage(currentPage + 1);
-				handler.onPageSelected(currentPage, itemsOnPage);
 			}
 		});
 		last.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				setCurrentPage(pagesNumber - 1);
-				handler.onPageSelected(currentPage, itemsOnPage);
 			}
 		});
 	}
@@ -117,6 +112,7 @@ public class NavigationBlock extends UiBlock {
 			setButtonEnabled(previous, currentPage != 0);
 			setButtonEnabled(next, currentPage != pagesNumber - 1);
 			setButtonEnabled(last, currentPage != pagesNumber - 1);
+			clickHandler.onPageSelected(currentPage, itemsOnPage);
 		}
 	}
 

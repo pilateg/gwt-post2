@@ -10,6 +10,8 @@ public abstract class Entity {
 		return getType().toString() + "#" + id;
 	}
 
+	public abstract String getDescription();
+
 	public long getId() {
 		return id;
 	}

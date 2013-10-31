@@ -6,6 +6,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.pils.post2.client.conversation.dto.Entry;
 import com.pils.post2.client.conversation.dto.Tag;
 import com.pils.post2.client.uiblocks.*;
 
@@ -24,7 +25,7 @@ public class Post2 implements EntryPoint {
 				logger.log(Level.SEVERE, "!!:", unwrap(e));
 			}
 		});
-		DockLayoutPanel blockHandler = new DockLayoutPanel(Style.Unit.PX);
+		final DockLayoutPanel blockHandler = new DockLayoutPanel(Style.Unit.PX);
 		RootLayoutPanel.get().add(blockHandler);
 
 		DockLayoutPanel east = new DockLayoutPanel(Style.Unit.PX);
@@ -33,32 +34,46 @@ public class Post2 implements EntryPoint {
 		Tag tag = new Tag();
 		final List<EntityLinkBlock> entities = new ArrayList<EntityLinkBlock>();
 		for (int i = 0; i < 4; ++i) {
-			EntityLinkBlock entityLink = new EntityLinkBlock();
 			tag.setName("tag_name" + i);
-			entityLink.setEntity(tag);
+			EntityLinkBlock entityLink = new EntityLinkBlock(tag);
 			entities.add(entityLink);
 		}
 		CategoriesBlock categoriesBlock = new CategoriesBlock();
-		categoriesBlock.setCategories(new ArrayList<EntityLinkBlock>(){{add(entities.get(2)); add(entities.get(3));}});
+		categoriesBlock.setCategories(entities.subList(2,4));
 		east.addNorth(categoriesBlock, 200);
 		blockHandler.addEast(east, 200);
-		DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
+		final DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
 		BreadcrumbBlock breadcrumb = new BreadcrumbBlock();
 		breadcrumb.addBreadcrumb(entities.get(0));
 		breadcrumb.addBreadcrumb(entities.get(1));
 		center.addNorth(breadcrumb, 40);
-		NavigationBlock navigation = new NavigationBlock();
-		navigation.setUp(1000, 2);
+		final NavigationBlock navigation = new NavigationBlock();
+		final int itemsNumber = 20;
+		navigation.setUp(itemsNumber, 7);
+		center.addSouth(navigation, 100);
+		Entry entry = new Entry();
+		final List<EntryBlock> entries = new ArrayList<EntryBlock>(itemsNumber);
+		for (int i = 0; i < itemsNumber; ++i) {
+			entry.setName("entry"+i);
+			entry.setContent("<b>"+i+"</b>");
+			EntryBlock entryBlock = new EntryBlock(entry);
+			entries.add(entryBlock);
+		}
+		final ContentBlock contentBlock = new ContentBlock();
 		navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
 			@Override
 			public void onPageSelected(int pageNumber, int itemsOnPage) {
-				//int offset = pageNumber*itemsOnPage;
-				//((ContentBlock) BlockFactory.getInstance().getContentBlock()).update(pageNumber*itemsOnPage, itemsOnPage);
+				if (pageNumber == -1) {
+					contentBlock.setEntries(null);
+					return;
+				}
+				int from = pageNumber * itemsOnPage;
+				int to = from + itemsOnPage > itemsNumber + 1 ? itemsNumber + 1 : from + itemsOnPage;
+				contentBlock.setEntries(entries.subList(from, to));
 			}
 		});
 		navigation.setCurrentPage(0);
-		center.addSouth(navigation, 100);
-		center.add(new ContentBlock());
+		center.add(contentBlock);
 		blockHandler.add(center);
 	}
 

@@ -1,19 +1,26 @@
 package com.pils.post2.client.uiblocks;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContentBlock extends UiBlock {
-	private List<EntryBlock> entries = new ArrayList<EntryBlock>();
+	private FlowPanel mainPanel = GWT.create(FlowPanel.class);
 
 	public ContentBlock() {
-		FlowPanel mainPanel = new FlowPanel();
-		mainPanel.addStyleName(EntityLinkBlock.EntityLinkResources.INSTANCE.css().entityLink());
-		for (EntryBlock entry : entries)
-			mainPanel.add(entry);
-		initWidget(mainPanel);
+		ScrollPanel scrollPanel = new ScrollPanel(mainPanel);
+		scrollPanel.addStyleName(Resources.INSTANCE.css().block());
+		initWidget(scrollPanel);
+	}
+
+	public void setEntries(List<EntryBlock> categories) {
+		mainPanel.clear();
+		if (categories != null)
+			for (EntryBlock entity : categories)
+				mainPanel.add(entity);
 	}
 }
