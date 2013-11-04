@@ -34,7 +34,7 @@ public class Post2 implements EntryPoint {
 		Tag tag = new Tag();
 		final List<EntityLinkBlock> entities = new ArrayList<EntityLinkBlock>();
 		for (int i = 0; i < 4; ++i) {
-			tag.setName("tag_name" + i);
+			tag.setTitle("tag_name" + i);
 			EntityLinkBlock entityLink = new EntityLinkBlock(tag);
 			entities.add(entityLink);
 		}
@@ -54,7 +54,7 @@ public class Post2 implements EntryPoint {
 		Entry entry = new Entry();
 		final List<EntryBlock> entries = new ArrayList<EntryBlock>(itemsNumber);
 		for (int i = 0; i < itemsNumber; ++i) {
-			entry.setName("entry"+i);
+			entry.setTitle("entry"+i);
 			entry.setContent("<b>"+i+"</b>");
 			EntryBlock entryBlock = new EntryBlock(entry);
 			entries.add(entryBlock);

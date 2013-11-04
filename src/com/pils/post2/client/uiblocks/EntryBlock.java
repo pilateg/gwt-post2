@@ -25,7 +25,7 @@ public class EntryBlock extends UiBlock {
 			@Override
 			public void onClick(ClickEvent event) {
 				switch (entity.getType()) {
-					case Category:
+					case Section:
 						popup.setWidget(new Label("category options"));
 						break;
 					case Entry:
@@ -48,7 +48,7 @@ public class EntryBlock extends UiBlock {
 			}
 		});
 		entity = e;
-		link.setHTML("<h2>" + entity.toString() + "</h2>");
+		link.setHTML("<h2>" + entity.getTitle() + "</h2>");
 		HTML description = new HTML(entity.getDescription());
 		description.getElement().getStyle().setDisplay(Style.Display.BLOCK);
 		mainPanel.add(description);

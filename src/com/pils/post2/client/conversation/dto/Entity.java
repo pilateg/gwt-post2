@@ -1,14 +1,11 @@
 package com.pils.post2.client.conversation.dto;
 
 public abstract class Entity {
-	private long id;
+	protected long id;
 
 	public abstract EntityType getType();
 
-	@Override
-	public String toString() {
-		return getType().toString() + "#" + id;
-	}
+	public abstract String getTitle();
 
 	public abstract String getDescription();
 
@@ -21,6 +18,6 @@ public abstract class Entity {
 	}
 
 	public enum EntityType {
-		Category, Tag, Entry
+		Section, Tag, Entry, Comment, User
 	}
 }

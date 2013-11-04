@@ -27,7 +27,7 @@ public class EntityLinkBlock extends UiBlock {
 			@Override
 			public void onClick(ClickEvent event) {
 				switch (entity.getType()) {
-					case Category:
+					case Section:
 						popup.setWidget(new Label("category options"));
 						break;
 					case Entry:
@@ -44,7 +44,7 @@ public class EntityLinkBlock extends UiBlock {
 		mainPanel.add(link);
 		initWidget(mainPanel);
 		entity = e;
-		link.setText(entity.toString());
+		link.setText(entity.getTitle());
 	}
 
 	public void setClickHandler(ClickHandler handler) {

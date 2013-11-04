@@ -1,8 +1,13 @@
 package com.pils.post2.client.conversation.dto;
 
+import java.util.List;
+
 public class Entry extends Entity {
-	private String name;
+	private String title;
+	private Section section;
 	private String content;
+	private List<Tag> tags;
+	private List<Comment> comments;
 
 	@Override
 	public EntityType getType() {
@@ -10,8 +15,8 @@ public class Entry extends Entity {
 	}
 
 	@Override
-	public String toString() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
 	@Override
@@ -19,12 +24,16 @@ public class Entry extends Entity {
 		return content.substring(0, 128);
 	}
 
-	public String getName() {
-		return name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
 	}
 
 	public String getContent() {
@@ -33,5 +42,21 @@ public class Entry extends Entity {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 }
