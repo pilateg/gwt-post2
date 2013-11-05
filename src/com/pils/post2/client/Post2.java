@@ -29,6 +29,8 @@ public class Post2 implements EntryPoint {
 		});
 		final DockLayoutPanel blockHandler = new DockLayoutPanel(Style.Unit.PX);
 		RootLayoutPanel.get().add(blockHandler);
+		final ContentBlock contentBlock = new ContentBlock();
+		NavigationMediator.init(contentBlock);
 
 		DockLayoutPanel east = new DockLayoutPanel(Style.Unit.PX);
 		east.addNorth(new LoginBlock(), 200);
@@ -52,26 +54,7 @@ public class Post2 implements EntryPoint {
 		final int itemsNumber = 20;
 		navigation.setUp(itemsNumber, 7);
 		center.addSouth(navigation, 100);
-		final List<Entity> entries = new ArrayList<Entity>(itemsNumber);
-		for (int i = 0; i < itemsNumber; ++i) {
-			Entry entry = new Entry();
-			entry.setTitle("entry" + i);
-			entry.setContent("<b>" + i + "</b>");
-			entries.add(entry);
-		}
-		final ContentBlock contentBlock = new ContentBlock();
-		navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
-			@Override
-			public void onPageSelected(int pageNumber, int itemsOnPage) {
-				if (pageNumber == -1) {
-					contentBlock.setEntries(null);
-					return;
-				}
-				int from = pageNumber * itemsOnPage;
-				int to = from + itemsOnPage > itemsNumber + 1 ? itemsNumber + 1 : from + itemsOnPage;
-				contentBlock.setEntries(entries.subList(from, to));
-			}
-		});
+		navigation.setPageSelectionHandler(NavigationMediator.getPageSelectionHandler());
 		navigation.setCurrentPage(0);
 		center.add(contentBlock);
 		blockHandler.add(center);

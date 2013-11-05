@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.*;
+import com.pils.post2.client.NavigationMediator;
 import com.pils.post2.client.conversation.dto.Entity;
 import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
@@ -13,11 +14,12 @@ import com.pils.post2.client.layout.widgets.Button;
 public class EntityBlock extends UiBlock {
 
 	protected Entity entity;
+	protected EntitySelectionHandler selectionHandler = NavigationMediator.getEntitySelectionHandler();
 	protected Anchor link = GWT.create(Anchor.class);
 	protected FlowPanel mainPanel;
 	protected HTML description;
 
-	public EntityBlock(Entity e) {
+	public EntityBlock(final Entity e) {
 		mainPanel = new FlowPanel();
 		final Button options = new Button();
 		options.setText("o");
@@ -48,6 +50,8 @@ public class EntityBlock extends UiBlock {
 			@Override
 			public void onClick(ClickEvent event) {
 				History.newItem("");
+				if (selectionHandler != null)
+					selectionHandler.onEntitySelected(e);
 			}
 		});
 		link.setText(entity.getTitle());
@@ -56,7 +60,7 @@ public class EntityBlock extends UiBlock {
 		mainPanel.add(description);
 	}
 
-	public void setClickHandler(ClickHandler handler) {
-		link.addClickHandler(handler);
+	public interface EntitySelectionHandler {
+		void onEntitySelected(Entity e);
 	}
 }

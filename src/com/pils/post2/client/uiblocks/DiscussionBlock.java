@@ -12,6 +12,7 @@ public class DiscussionBlock extends UiBlock {
 
 	public DiscussionBlock() {
 		mainPanel = new FlowPanel();
+		initWidget(mainPanel);
 	}
 
 	public void setComments(List<Comment> comments) {

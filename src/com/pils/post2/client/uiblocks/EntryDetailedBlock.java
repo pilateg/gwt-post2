@@ -11,7 +11,11 @@ public class EntryDetailedBlock extends EntityBlock {
 		mainPanel.getElement().getStyle().setWidth(100, Style.Unit.PCT);
 		switch (e.getType()) {
 			case Entry:
-				description.setHTML(((Entry) e).getContent());
+				Entry entry = (Entry) e;
+				description.setHTML(entry.getContent());
+				DiscussionBlock discussion = new DiscussionBlock();
+				discussion.setComments(entry.getComments());
+				mainPanel.add(discussion);
 				break;
 		}
 	}

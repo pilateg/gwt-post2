@@ -24,4 +24,10 @@ public class ContentBlock extends UiBlock {
 			for (Entity entity : entities)
 				mainPanel.add(new EntryBlock(entity));
 	}
+
+	public void setEntry(Entity entity) {
+		mainPanel.clear();
+		if (entity != null)
+			mainPanel.add(new EntryDetailedBlock(entity));
+	}
 }
