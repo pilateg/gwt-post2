@@ -6,8 +6,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.pils.post2.client.conversation.dto.Entity;
 import com.pils.post2.client.conversation.dto.Entry;
-import com.pils.post2.client.conversation.dto.Tag;
+import com.pils.post2.client.conversation.dto.Section;
 import com.pils.post2.client.uiblocks.*;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Post2 implements EntryPoint {
+
 	private Logger logger = Logger.getLogger("");
 
 	public void onModuleLoad() {
@@ -27,20 +29,21 @@ public class Post2 implements EntryPoint {
 		});
 		final DockLayoutPanel blockHandler = new DockLayoutPanel(Style.Unit.PX);
 		RootLayoutPanel.get().add(blockHandler);
+		final ContentBlock contentBlock = new ContentBlock();
+		NavigationMediator.init(contentBlock);
 
 		DockLayoutPanel east = new DockLayoutPanel(Style.Unit.PX);
 		east.addNorth(new LoginBlock(), 200);
 		east.addNorth(new SearchBlock(), 200);
-		Tag tag = new Tag();
-		final List<EntityLinkBlock> entities = new ArrayList<EntityLinkBlock>();
+		final List<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < 4; ++i) {
-			tag.setName("tag_name" + i);
-			EntityLinkBlock entityLink = new EntityLinkBlock(tag);
-			entities.add(entityLink);
+			Section section = new Section();
+			section.setTitle("tag_name" + i);
+			entities.add(section);
 		}
-		CategoriesBlock categoriesBlock = new CategoriesBlock();
-		categoriesBlock.setCategories(entities.subList(2,4));
-		east.addNorth(categoriesBlock, 200);
+		LinksBlock linksBlock = new LinksBlock("links");
+		linksBlock.setCategories(entities.subList(2, 4));
+		east.addNorth(linksBlock, 200);
 		blockHandler.addEast(east, 200);
 		final DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
 		BreadcrumbBlock breadcrumb = new BreadcrumbBlock();
@@ -51,27 +54,7 @@ public class Post2 implements EntryPoint {
 		final int itemsNumber = 20;
 		navigation.setUp(itemsNumber, 7);
 		center.addSouth(navigation, 100);
-		Entry entry = new Entry();
-		final List<EntryBlock> entries = new ArrayList<EntryBlock>(itemsNumber);
-		for (int i = 0; i < itemsNumber; ++i) {
-			entry.setName("entry"+i);
-			entry.setContent("<b>"+i+"</b>");
-			EntryBlock entryBlock = new EntryBlock(entry);
-			entries.add(entryBlock);
-		}
-		final ContentBlock contentBlock = new ContentBlock();
-		navigation.setPageSelectionHandler(new NavigationBlock.PageSelectionHandler() {
-			@Override
-			public void onPageSelected(int pageNumber, int itemsOnPage) {
-				if (pageNumber == -1) {
-					contentBlock.setEntries(null);
-					return;
-				}
-				int from = pageNumber * itemsOnPage;
-				int to = from + itemsOnPage > itemsNumber + 1 ? itemsNumber + 1 : from + itemsOnPage;
-				contentBlock.setEntries(entries.subList(from, to));
-			}
-		});
+		navigation.setPageSelectionHandler(NavigationMediator.getPageSelectionHandler());
 		navigation.setCurrentPage(0);
 		center.add(contentBlock);
 		blockHandler.add(center);

@@ -1,7 +1,7 @@
 package com.pils.post2.client.conversation.dto;
 
 public class Tag extends Entity {
-	private String name;
+	private String title;
 
 	@Override
 	public EntityType getType() {
@@ -9,8 +9,8 @@ public class Tag extends Entity {
 	}
 
 	@Override
-	public String toString() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
 	@Override
@@ -18,11 +18,7 @@ public class Tag extends Entity {
 		return "";
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

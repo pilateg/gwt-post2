@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="Post2" default="war" basedir=".">
-	<property file="build.properties"/>
+	<property file="../post2-build.properties"/>
 
 	<path id="project.class.path">
 		<pathelement location="${out.dir}/WEB-INF/classes"/>
