@@ -3,6 +3,7 @@ package com.pils.post2.client.uiblocks;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.pils.post2.client.conversation.dto.Entity;
 import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
 
@@ -17,10 +18,10 @@ public class ContentBlock extends UiBlock {
 		initWidget(scrollPanel);
 	}
 
-	public void setEntries(List<EntryBlock> categories) {
+	public void setEntries(List<Entity> entities) {
 		mainPanel.clear();
-		if (categories != null)
-			for (EntryBlock entity : categories)
-				mainPanel.add(entity);
+		if (entities != null)
+			for (Entity entity : entities)
+				mainPanel.add(new EntryBlock(entity));
 	}
 }

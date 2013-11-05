@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.pils.post2.client.conversation.dto.Entity;
 import com.pils.post2.client.layout.UiBlock;
 
 public class BreadcrumbBlock extends UiBlock {
@@ -15,8 +16,9 @@ public class BreadcrumbBlock extends UiBlock {
 		initWidget(mainPanel);
 	}
 
-	public void addBreadcrumb(EntityLinkBlock block) {
-		mainPanel.add(block);
+	public void addBreadcrumb(Entity entity) {
+		if (entity != null)
+			mainPanel.add(new EntityLinkBlock(entity));
 	}
 
 	public EntityLinkBlock removeBreadcrumb() {
