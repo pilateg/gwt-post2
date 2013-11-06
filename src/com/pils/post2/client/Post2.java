@@ -6,8 +6,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.pils.post2.client.conversation.ConversationManager;
 import com.pils.post2.client.conversation.dto.Entity;
-import com.pils.post2.client.conversation.dto.Entry;
 import com.pils.post2.client.conversation.dto.Section;
 import com.pils.post2.client.uiblocks.*;
 
@@ -58,6 +58,8 @@ public class Post2 implements EntryPoint {
 		navigation.setCurrentPage(0);
 		center.add(contentBlock);
 		blockHandler.add(center);
+
+		ConversationManager.restoreSession();
 	}
 
 	public static Throwable unwrap(Throwable e) {
