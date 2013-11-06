@@ -1,6 +1,8 @@
 package com.pils.post2.client.conversation.dto;
 
-public abstract class Entity {
+import java.io.Serializable;
+
+public abstract class Entity implements Serializable {
 	protected long id;
 
 	public abstract EntityType getType();

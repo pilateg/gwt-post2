@@ -7,9 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.pils.post2.client.ClientUtils;
-import com.pils.post2.client.conversation.ConversationCallback;
-import com.pils.post2.client.conversation.ConversationService;
+import com.pils.post2.client.conversation.ConversationManager;
 import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
@@ -41,11 +39,6 @@ public class LoginBlock extends UiBlock {
 
 	@UiHandler("loginButton")
 	void handleClick(ClickEvent e) {
-		ConversationService.App.getInstance().getMessage("Hello, World!", new ConversationCallback<String>() {
-			@Override
-			public void onSuccess(String result) {
-				ClientUtils.log(result);
-			}
-		});
+		ConversationManager.login(name.getText(), pass.getText());
 	}
 }
