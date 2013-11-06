@@ -2,7 +2,7 @@ package com.pils.post2.client.conversation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
-import com.pils.post2.Tuple2;
+import com.pils.post2.client.conversation.dto.SessionUser;
 import com.pils.post2.client.conversation.dto.User;
 
 import java.util.Date;
@@ -40,14 +40,14 @@ public class ConversationManager {
 	}
 
 	public static void login(String name, String password) {
-		SERVICE.login(name, password, new ConversationCallback<Tuple2<Long, User>>() {
+		SERVICE.login(name, password, new ConversationCallback<SessionUser>() {
 			@Override
-			public void onSuccess(Tuple2<Long, User> sessionUser) {
+			public void onSuccess(SessionUser sessionUser) {
 				if (sessionUser != null) {
-					sessionId = sessionUser.first;
-					currentUser = sessionUser.second;
+					sessionId = sessionUser.sessionId;
+					currentUser = sessionUser.user;
 					Date expires = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30);
-					Cookies.setCookie(COOKIE_NAME, sessionUser.first.toString(), expires, null, "/", false);
+					Cookies.setCookie(COOKIE_NAME, sessionUser.sessionId.toString(), expires, null, "/", false);
 				} else {
 					sessionId = -1;
 					currentUser = null;

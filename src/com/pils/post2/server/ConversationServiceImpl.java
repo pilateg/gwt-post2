@@ -1,7 +1,7 @@
 package com.pils.post2.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.pils.post2.Tuple2;
+import com.pils.post2.client.conversation.dto.SessionUser;
 import com.pils.post2.client.conversation.ConversationService;
 import com.pils.post2.client.conversation.dto.User;
 
@@ -13,7 +13,7 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 
 	private Map<Long, User> sessions = new HashMap<Long, User>();
 
-	public Tuple2<Long, User> login(String name, String password) {
+	public SessionUser login(String name, String password) {
 		User user = null;
 
 		//get user from db
@@ -26,7 +26,7 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 			return null;
 		long sessionId = new SecureRandom().nextLong();
 		sessions.put(sessionId, user);
-		return new Tuple2<Long, User>(sessionId, user);
+		return new SessionUser(sessionId, user);
 	}
 
 	@Override
