@@ -2,6 +2,8 @@ package com.pils.post2.client.conversation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.pils.post2.client.conversation.dto.Comment;
 import com.pils.post2.client.conversation.dto.SessionUser;
 import com.pils.post2.client.conversation.dto.User;
 
@@ -72,5 +74,9 @@ public class ConversationManager {
 
 	public static User getCurrentUser() {
 		return currentUser;
+	}
+
+	public static void addComment(Comment comment, AsyncCallback<Boolean> callback) {
+		SERVICE.addComment(sessionId, comment, callback);
 	}
 }

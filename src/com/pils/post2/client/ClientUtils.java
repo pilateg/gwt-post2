@@ -5,6 +5,10 @@ public class ClientUtils {
 	private ClientUtils() {
 	}
 
+	public static String escape(String s) {
+		return s.replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;").replace("\"","&quot;");
+	}
+
 	public static void log(Object... args) {
 		if (isSupported())
 			for (Object o : args)

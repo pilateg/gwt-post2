@@ -5,7 +5,9 @@ import java.util.List;
 public class User extends Entity {
 	private String name;
 	private String password;
+	transient
 	private List<Section> sections;
+	transient
 	private List<Comment> comments;
 
 	@Override

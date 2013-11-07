@@ -13,7 +13,7 @@ public class EntryDetailedBlock extends EntityBlock {
 			case Entry:
 				Entry entry = (Entry) e;
 				description.setHTML(entry.getContent());
-				DiscussionBlock discussion = new DiscussionBlock();
+				DiscussionBlock discussion = new DiscussionBlock(entry);
 				discussion.setComments(entry.getComments());
 				mainPanel.add(discussion);
 				break;

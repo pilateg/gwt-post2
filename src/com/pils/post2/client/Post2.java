@@ -27,6 +27,11 @@ public class Post2 implements EntryPoint {
 				logger.log(Level.SEVERE, "!!:", unwrap(e));
 			}
 		});
+		ConversationManager.restoreSession();
+		init();
+	}
+
+	public void init() {
 		final DockLayoutPanel blockHandler = new DockLayoutPanel(Style.Unit.PX);
 		RootLayoutPanel.get().add(blockHandler);
 		final ContentBlock contentBlock = new ContentBlock();
@@ -58,8 +63,6 @@ public class Post2 implements EntryPoint {
 		navigation.setCurrentPage(0);
 		center.add(contentBlock);
 		blockHandler.add(center);
-
-		ConversationManager.restoreSession();
 	}
 
 	public static Throwable unwrap(Throwable e) {
