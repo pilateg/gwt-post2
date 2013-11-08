@@ -13,9 +13,15 @@
 		}
 	</ui:style>
 	<g:FlowPanel ui:field="mainPanel" styleName="{style.mainPanel}">
-		<g:TextBox ui:field="name"/>
-		<g:TextBox ui:field="pass"/>
-		<w:Button ui:field="loginButton"/>
-		<w:Button ui:field="registerButton"/>
+		<g:FlowPanel ui:field="loginPanel">
+			<g:TextBox ui:field="name"/>
+			<g:TextBox ui:field="pass"/>
+			<w:Button ui:field="loginButton"/>
+			<w:Button ui:field="registerButton"/>
+		</g:FlowPanel>
+		<g:FlowPanel ui:field="loggedPanel" visible="false">
+			<g:Label ui:field="userName"/>
+			<w:Button ui:field="logoutButton" text="log out"/>
+		</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder>

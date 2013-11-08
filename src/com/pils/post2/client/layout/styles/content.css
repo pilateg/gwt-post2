@@ -1,0 +1,7 @@
+.popup {
+	width: 30%;
+}
+
+.popup input, .popup textarea {
+	width: 100%;
+}

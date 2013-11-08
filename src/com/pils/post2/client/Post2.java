@@ -6,9 +6,11 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.pils.post2.client.conversation.ConversationCallback;
 import com.pils.post2.client.conversation.ConversationManager;
 import com.pils.post2.client.conversation.dto.Entity;
 import com.pils.post2.client.conversation.dto.Section;
+import com.pils.post2.client.conversation.dto.User;
 import com.pils.post2.client.uiblocks.*;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.logging.Logger;
 public class Post2 implements EntryPoint {
 
 	private Logger logger = Logger.getLogger("");
+	private LoginBlock loginBlock;
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
@@ -27,7 +30,13 @@ public class Post2 implements EntryPoint {
 				logger.log(Level.SEVERE, "!!:", unwrap(e));
 			}
 		});
-		ConversationManager.restoreSession();
+		loginBlock = new LoginBlock();
+		ConversationManager.restoreSession(new ConversationCallback<User>() {
+			@Override
+			public void onSuccess(User user) {
+				loginBlock.setMode(user);
+			}
+		});
 		init();
 	}
 
@@ -38,7 +47,7 @@ public class Post2 implements EntryPoint {
 		NavigationMediator.init(contentBlock);
 
 		DockLayoutPanel east = new DockLayoutPanel(Style.Unit.PX);
-		east.addNorth(new LoginBlock(), 200);
+		east.addNorth(loginBlock, 200);
 		east.addNorth(new SearchBlock(), 200);
 		final List<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < 4; ++i) {
