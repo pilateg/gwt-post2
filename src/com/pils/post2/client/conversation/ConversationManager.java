@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.pils.post2.client.conversation.dto.Comment;
+import com.pils.post2.client.conversation.dto.Entry;
 import com.pils.post2.client.conversation.dto.SessionUser;
 import com.pils.post2.client.conversation.dto.User;
 
@@ -21,7 +22,7 @@ public class ConversationManager {
 	private ConversationManager() {
 	}
 
-	public static void restoreSession() {
+	public static void restoreSession(final AsyncCallback<User> callback) {
 		long sid;
 		try {
 			sid = Long.parseLong(Cookies.getCookie(COOKIE_NAME));
@@ -30,7 +31,7 @@ public class ConversationManager {
 		}
 		final long finalSid = sid;
 		if (sid != -1)
-			SERVICE.getUser(sid, new ConversationCallback<User>() {
+			SERVICE.getUser(sid, new AsyncCallback<User>() {
 				@Override
 				public void onSuccess(User user) {
 					if (user != null) {
@@ -38,6 +39,12 @@ public class ConversationManager {
 						currentUser = user;
 					} else
 						Cookies.removeCookie(COOKIE_NAME, "/");
+					callback.onSuccess(user);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					callback.onFailure(caught);
 				}
 			});
 	}
@@ -95,5 +102,9 @@ public class ConversationManager {
 
 	public static void addComment(Comment comment, AsyncCallback<Boolean> callback) {
 		SERVICE.addComment(sessionId, comment, callback);
+	}
+
+	public static void addEntry(Entry entry, AsyncCallback<Boolean> callback) {
+		SERVICE.addEntry(sessionId, entry, callback);
 	}
 }

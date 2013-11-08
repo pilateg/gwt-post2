@@ -50,16 +50,25 @@ public class LoginBlock extends UiBlock {
 		registerButton.setText("Register");
 	}
 
+	public void setMode(User loggedUser) {
+		if (loggedUser != null) {
+			userName.setText(loggedUser.getName());
+			loginPanel.setVisible(false);
+			loggedPanel.setVisible(true);
+		} else {
+			name.setText("");
+			pass.setText("");
+			loginPanel.setVisible(true);
+			loggedPanel.setVisible(false);
+		}
+	}
+
 	@UiHandler("loginButton")
 	void loginClick(ClickEvent e) {
 		ConversationManager.login(name.getText(), pass.getText(), new ConversationCallback<User>() {
 			@Override
 			public void onSuccess(User user) {
-				if (user != null) {
-					userName.setText(user.getName());
-					loginPanel.setVisible(false);
-					loggedPanel.setVisible(true);
-				}
+				setMode(user);
 			}
 		});
 	}
@@ -69,12 +78,8 @@ public class LoginBlock extends UiBlock {
 		ConversationManager.logout(new ConversationCallback<Boolean>() {
 			@Override
 			public void onSuccess(Boolean result) {
-				if (result) {
-					name.setText("");
-					pass.setText("");
-					loginPanel.setVisible(true);
-					loggedPanel.setVisible(false);
-				}
+				if (result)
+					setMode(null);
 			}
 		});
 	}

@@ -3,6 +3,7 @@ package com.pils.post2.client.conversation;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.pils.post2.client.conversation.dto.Comment;
+import com.pils.post2.client.conversation.dto.Entry;
 import com.pils.post2.client.conversation.dto.SessionUser;
 import com.pils.post2.client.conversation.dto.User;
 
@@ -16,4 +17,6 @@ public interface ConversationService extends RemoteService {
 	boolean logout(long sessionId);
 
 	boolean addComment(long sessionId, Comment comment);
+
+	boolean addEntry(long sessionId, Entry entry);
 }
