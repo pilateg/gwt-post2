@@ -1,8 +1,8 @@
 package com.pils.post2.client;
 
-import com.pils.post2.client.conversation.dto.Comment;
-import com.pils.post2.client.conversation.dto.Entity;
-import com.pils.post2.client.conversation.dto.Entry;
+import com.pils.post2.shared.dto.Comment;
+import com.pils.post2.shared.dto.Entity;
+import com.pils.post2.shared.dto.Entry;
 import com.pils.post2.client.uiblocks.ContentBlock;
 import com.pils.post2.client.uiblocks.EntityBlock;
 import com.pils.post2.client.uiblocks.NavigationBlock;

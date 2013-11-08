@@ -1,10 +1,10 @@
-package com.pils.post2.client.conversation;
+package com.pils.post2.shared.conversation;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.pils.post2.client.conversation.dto.Comment;
-import com.pils.post2.client.conversation.dto.Entry;
-import com.pils.post2.client.conversation.dto.SessionUser;
-import com.pils.post2.client.conversation.dto.User;
+import com.pils.post2.shared.dto.Comment;
+import com.pils.post2.shared.dto.Entry;
+import com.pils.post2.shared.dto.SessionUser;
+import com.pils.post2.shared.dto.User;
 
 public interface ConversationServiceAsync {
 	void login(String name, String password, AsyncCallback<SessionUser> async);

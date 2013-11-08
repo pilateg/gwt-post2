@@ -1,7 +1,7 @@
 package com.pils.post2.client.uiblocks;
 
 import com.google.gwt.dom.client.Style;
-import com.pils.post2.client.conversation.dto.Entity;
+import com.pils.post2.shared.dto.Entity;
 
 public class EntryBlock extends EntityBlock {
 

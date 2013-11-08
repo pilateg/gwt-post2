@@ -1,11 +1,11 @@
 package com.pils.post2.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.pils.post2.client.conversation.dto.Comment;
-import com.pils.post2.client.conversation.dto.Entry;
-import com.pils.post2.client.conversation.dto.SessionUser;
-import com.pils.post2.client.conversation.ConversationService;
-import com.pils.post2.client.conversation.dto.User;
+import com.pils.post2.shared.dto.Comment;
+import com.pils.post2.shared.dto.Entry;
+import com.pils.post2.shared.dto.SessionUser;
+import com.pils.post2.shared.conversation.ConversationService;
+import com.pils.post2.shared.dto.User;
 
 import java.security.SecureRandom;
 import java.util.HashMap;

@@ -1,12 +1,12 @@
-package com.pils.post2.client.conversation;
+package com.pils.post2.shared.conversation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.pils.post2.client.conversation.dto.Comment;
-import com.pils.post2.client.conversation.dto.Entry;
-import com.pils.post2.client.conversation.dto.SessionUser;
-import com.pils.post2.client.conversation.dto.User;
+import com.pils.post2.shared.dto.Comment;
+import com.pils.post2.shared.dto.Entry;
+import com.pils.post2.shared.dto.SessionUser;
+import com.pils.post2.shared.dto.User;
 
 import java.util.Date;
 

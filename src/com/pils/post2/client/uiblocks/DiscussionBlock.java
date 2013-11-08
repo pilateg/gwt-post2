@@ -5,11 +5,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.pils.post2.client.ClientUtils;
-import com.pils.post2.client.conversation.ConversationCallback;
-import com.pils.post2.client.conversation.ConversationManager;
-import com.pils.post2.client.conversation.dto.Comment;
-import com.pils.post2.client.conversation.dto.Entry;
-import com.pils.post2.client.conversation.dto.User;
+import com.pils.post2.shared.conversation.ConversationCallback;
+import com.pils.post2.shared.conversation.ConversationManager;
+import com.pils.post2.shared.dto.Comment;
+import com.pils.post2.shared.dto.Entry;
+import com.pils.post2.shared.dto.User;
 import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
 

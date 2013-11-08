@@ -19,6 +19,7 @@
 	<set-configuration-property name="CssResource.style" value="pretty"/>
 
 	<source path="client"/>
+	<source path="shared"/>
 
 	<entry-point class='com.pils.post2.client.Post2'/>
 

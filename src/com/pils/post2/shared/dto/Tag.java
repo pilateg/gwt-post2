@@ -1,4 +1,4 @@
-package com.pils.post2.client.conversation.dto;
+package com.pils.post2.shared.dto;
 
 public class Tag extends Entity {
 	private String title;

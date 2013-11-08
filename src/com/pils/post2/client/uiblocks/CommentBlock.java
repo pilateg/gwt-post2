@@ -1,6 +1,6 @@
 package com.pils.post2.client.uiblocks;
 
-import com.pils.post2.client.conversation.dto.Comment;
+import com.pils.post2.shared.dto.Comment;
 
 public class CommentBlock extends EntityBlock {
 

@@ -1,4 +1,4 @@
-package com.pils.post2.client.conversation.dto;
+package com.pils.post2.shared.dto;
 
 import java.io.Serializable;
 

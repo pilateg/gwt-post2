@@ -7,7 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.*;
 import com.pils.post2.client.NavigationMediator;
-import com.pils.post2.client.conversation.dto.Entity;
+import com.pils.post2.shared.dto.Entity;
 import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
 

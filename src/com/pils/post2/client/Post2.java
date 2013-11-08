@@ -6,11 +6,11 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.pils.post2.client.conversation.ConversationCallback;
-import com.pils.post2.client.conversation.ConversationManager;
-import com.pils.post2.client.conversation.dto.Entity;
-import com.pils.post2.client.conversation.dto.Section;
-import com.pils.post2.client.conversation.dto.User;
+import com.pils.post2.shared.conversation.ConversationCallback;
+import com.pils.post2.shared.conversation.ConversationManager;
+import com.pils.post2.shared.dto.Entity;
+import com.pils.post2.shared.dto.Section;
+import com.pils.post2.shared.dto.User;
 import com.pils.post2.client.uiblocks.*;
 
 import java.util.ArrayList;
