@@ -11,6 +11,7 @@ import java.util.Date;
 
 public class ConversationManager {
 
+	private static final long EXPIRE_PERIOD = 1000 * 60 * 60 * 24 * 30L;
 	private static final String COOKIE_NAME = "sid";
 	private static final ConversationServiceAsync SERVICE = GWT.create(ConversationService.class);
 
@@ -48,7 +49,7 @@ public class ConversationManager {
 				if (sessionUser != null) {
 					sessionId = sessionUser.sessionId;
 					currentUser = sessionUser.user;
-					Date expires = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30);
+					Date expires = new Date(System.currentTimeMillis() + EXPIRE_PERIOD);
 					Cookies.setCookie(COOKIE_NAME, sessionUser.sessionId.toString(), expires, null, "/", false);
 				} else {
 					sessionId = -1;
