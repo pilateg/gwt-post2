@@ -42,8 +42,8 @@ public class ConversationManager {
 			});
 	}
 
-	public static void login(String name, String password) {
-		SERVICE.login(name, password, new ConversationCallback<SessionUser>() {
+	public static void login(String name, String password, final AsyncCallback<User> callback) {
+		SERVICE.login(name, password, new AsyncCallback<SessionUser>() {
 			@Override
 			public void onSuccess(SessionUser sessionUser) {
 				if (sessionUser != null) {
@@ -55,13 +55,21 @@ public class ConversationManager {
 					sessionId = -1;
 					currentUser = null;
 				}
+				if (callback != null)
+					callback.onSuccess(sessionUser == null ? null : sessionUser.user);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				if (callback != null)
+					callback.onFailure(caught);
 			}
 		});
 	}
 
-	public static void logout() {
+	public static void logout(final AsyncCallback<Boolean> callback) {
 		if (sessionId != -1)
-			SERVICE.logout(sessionId, new ConversationCallback<Boolean>() {
+			SERVICE.logout(sessionId, new AsyncCallback<Boolean>() {
 				@Override
 				public void onSuccess(Boolean result) {
 					if (result) {
@@ -69,6 +77,14 @@ public class ConversationManager {
 						currentUser = null;
 						Cookies.removeCookie(COOKIE_NAME, "/");
 					}
+					if (callback != null)
+						callback.onSuccess(result);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					if (callback != null)
+						callback.onFailure(caught);
 				}
 			});
 	}
