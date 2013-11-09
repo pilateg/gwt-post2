@@ -1,5 +1,6 @@
 package com.pils.post2.client;
 
+import com.pils.post2.client.uiblocks.LoginBlock;
 import com.pils.post2.shared.dto.Comment;
 import com.pils.post2.shared.dto.Entity;
 import com.pils.post2.shared.dto.Entry;
@@ -13,12 +14,14 @@ import java.util.List;
 
 public class NavigationMediator {
 
+	private static LoginBlock loginBlock;
 	private static ContentBlock contentBlock;
 
 	private NavigationMediator() {
 	}
 
-	public static void init(ContentBlock content) {
+	public static void init(LoginBlock login, ContentBlock content) {
+		loginBlock = login;
 		contentBlock = content;
 	}
 
@@ -58,5 +61,13 @@ public class NavigationMediator {
 				contentBlock.setEntry(e);
 			}
 		};
+	}
+
+	public static LoginBlock getLoginBlock() {
+		return loginBlock;
+	}
+
+	public static ContentBlock getContentBlock() {
+		return contentBlock;
 	}
 }

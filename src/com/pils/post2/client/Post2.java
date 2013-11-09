@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 public class Post2 implements EntryPoint {
 
 	private Logger logger = Logger.getLogger("");
-	private LoginBlock loginBlock;
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
@@ -32,26 +31,24 @@ public class Post2 implements EntryPoint {
 				logger.log(Level.SEVERE, "!!:", unwrap(e));
 			}
 		});
-		loginBlock = new LoginBlock();
+		NavigationMediator.init(new LoginBlock(), new ContentBlock());
 		ConversationManager.restoreSession(new ConversationCallback<User>() {
 			@Override
 			public void onSuccess(User user) {
-				loginBlock.setMode(user);
+				NavigationMediator.getLoginBlock().setMode(user);
 			}
 		});
 		Resources.INSTANCE.css().ensureInjected();
 		init();
 	}
 
-	public void init() {
+	public static void init() {
 		final DockLayoutPanel blockHandler = new DockLayoutPanel(Style.Unit.PX);
 		RootLayoutPanel.get().add(blockHandler);
-		final ContentBlock contentBlock = new ContentBlock();
-		NavigationMediator.init(contentBlock);
 
 		VerticalPanel east = new VerticalPanel();
 		east.addStyleName(Resources.INSTANCE.css().sidePanel());
-		east.add(loginBlock);
+		east.add(NavigationMediator.getLoginBlock());
 		east.add(new SearchBlock());
 		final List<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < 4; ++i) {
@@ -74,7 +71,7 @@ public class Post2 implements EntryPoint {
 		center.addSouth(navigation, 100);
 		navigation.setPageSelectionHandler(NavigationMediator.getPageSelectionHandler());
 		navigation.setCurrentPage(0);
-		center.add(contentBlock);
+		center.add(NavigationMediator.getContentBlock());
 		blockHandler.add(center);
 	}
 
