@@ -1,6 +1,10 @@
 @def backColor #cce;
 @def borderColor #445;
 
+textarea {
+	resize: vertical;
+}
+
 .block {
 	background: backColor;
 	border: borderColor solid 1px;
