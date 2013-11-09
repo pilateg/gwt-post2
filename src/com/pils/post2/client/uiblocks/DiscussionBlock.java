@@ -2,6 +2,7 @@ package com.pils.post2.client.uiblocks;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.pils.post2.client.ClientUtils;
@@ -10,13 +11,12 @@ import com.pils.post2.shared.conversation.ConversationManager;
 import com.pils.post2.shared.dto.Comment;
 import com.pils.post2.shared.dto.Entry;
 import com.pils.post2.shared.dto.User;
-import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
 
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionBlock extends UiBlock {
+public class DiscussionBlock extends Composite {
 
 	private FlowPanel mainPanel;
 	private TextArea textArea;

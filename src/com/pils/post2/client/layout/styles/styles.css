@@ -1,13 +1,19 @@
 @def backColor #cce;
 @def borderColor #445;
 
+textarea {
+	resize: vertical;
+}
+
 .block {
 	background: backColor;
 	border: borderColor solid 1px;
 	border-radius: 3px;
 	padding: 4px;
+	margin: 4px;
 }
 
-.block > * {
-	float: left;
+.sidePanel {
+	table-layout: fixed;
+	width: 100%;
 }

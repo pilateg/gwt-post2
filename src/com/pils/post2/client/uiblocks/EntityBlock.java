@@ -8,10 +8,9 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.*;
 import com.pils.post2.client.NavigationMediator;
 import com.pils.post2.shared.dto.Entity;
-import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
 
-public class EntityBlock extends UiBlock {
+public class EntityBlock extends Composite {
 
 	protected Entity entity;
 	protected EntitySelectionHandler selectionHandler = NavigationMediator.getEntitySelectionHandler();

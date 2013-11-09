@@ -1,11 +1,8 @@
 package com.pils.post2.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.pils.post2.shared.dto.Comment;
-import com.pils.post2.shared.dto.Entry;
-import com.pils.post2.shared.dto.SessionUser;
+import com.pils.post2.shared.dto.*;
 import com.pils.post2.shared.conversation.ConversationService;
-import com.pils.post2.shared.dto.User;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -53,6 +50,11 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 
 	@Override
 	public boolean addEntry(long sessionId, Entry entry) {
+		return true;
+	}
+
+	@Override
+	public boolean addSection(long sessionId, Section section) {
 		return true;
 	}
 }

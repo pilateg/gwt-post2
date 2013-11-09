@@ -11,7 +11,8 @@ public interface Resources extends ClientBundle {
 	Css css();
 
 	interface Css extends CssResource {
-		@ClassName("block")
 		String block();
+
+		String sidePanel();
 	}
 }

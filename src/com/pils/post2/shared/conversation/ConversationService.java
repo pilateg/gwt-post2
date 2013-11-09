@@ -2,10 +2,7 @@ package com.pils.post2.shared.conversation;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.pils.post2.shared.dto.Comment;
-import com.pils.post2.shared.dto.Entry;
-import com.pils.post2.shared.dto.SessionUser;
-import com.pils.post2.shared.dto.User;
+import com.pils.post2.shared.dto.*;
 
 @RemoteServiceRelativePath("Post2Service")
 public interface ConversationService extends RemoteService {
@@ -19,4 +16,6 @@ public interface ConversationService extends RemoteService {
 	boolean addComment(long sessionId, Comment comment);
 
 	boolean addEntry(long sessionId, Entry entry);
+
+	boolean addSection(long sessionId, Section section);
 }
