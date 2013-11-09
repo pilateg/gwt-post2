@@ -61,9 +61,9 @@ public class LoginBlock extends Composite {
 		registerButton.setText("Register");
 	}
 
-	public void setMode(User loggedUser) {
-		if (loggedUser != null) {
-			userName.setText(loggedUser.getName());
+	public void setUser(User user) {
+		if (user != null) {
+			userName.setText(user.getName());
 			loginPanel.setVisible(false);
 			loggedPanel.setVisible(true);
 		} else {
@@ -75,12 +75,7 @@ public class LoginBlock extends Composite {
 	}
 
 	private void login() {
-		ConversationManager.login(name.getText(), pass.getText(), new ConversationCallback<User>() {
-			@Override
-			public void onSuccess(User user) {
-				setMode(user);
-			}
-		});
+		ConversationManager.login(name.getText(), pass.getText());
 	}
 
 	@UiHandler("loginButton")
@@ -90,12 +85,6 @@ public class LoginBlock extends Composite {
 
 	@UiHandler("logoutButton")
 	void logoutClick(ClickEvent e) {
-		ConversationManager.logout(new ConversationCallback<Boolean>() {
-			@Override
-			public void onSuccess(Boolean result) {
-				if (result)
-					setMode(null);
-			}
-		});
+		ConversationManager.logout();
 	}
 }

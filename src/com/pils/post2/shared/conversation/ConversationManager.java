@@ -3,6 +3,7 @@ package com.pils.post2.shared.conversation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.pils.post2.client.NavigationMediator;
 import com.pils.post2.shared.dto.Comment;
 import com.pils.post2.shared.dto.Entry;
 import com.pils.post2.shared.dto.SessionUser;
@@ -22,7 +23,7 @@ public class ConversationManager {
 	private ConversationManager() {
 	}
 
-	public static void restoreSession(final AsyncCallback<User> callback) {
+	public static void restoreSession() {
 		long sid;
 		try {
 			sid = Long.parseLong(Cookies.getCookie(COOKIE_NAME));
@@ -31,7 +32,7 @@ public class ConversationManager {
 		}
 		final long finalSid = sid;
 		if (sid != -1)
-			SERVICE.getUser(sid, new AsyncCallback<User>() {
+			SERVICE.getUser(sid, new ConversationCallback<User>() {
 				@Override
 				public void onSuccess(User user) {
 					if (user != null) {
@@ -39,18 +40,13 @@ public class ConversationManager {
 						currentUser = user;
 					} else
 						Cookies.removeCookie(COOKIE_NAME, "/");
-					callback.onSuccess(user);
-				}
-
-				@Override
-				public void onFailure(Throwable caught) {
-					callback.onFailure(caught);
+					NavigationMediator.onSuccessLoginCallbacks(user);
 				}
 			});
 	}
 
-	public static void login(String name, String password, final AsyncCallback<User> callback) {
-		SERVICE.login(name, password, new AsyncCallback<SessionUser>() {
+	public static void login(String name, String password) {
+		SERVICE.login(name, password, new ConversationCallback<SessionUser>() {
 			@Override
 			public void onSuccess(SessionUser sessionUser) {
 				if (sessionUser != null) {
@@ -62,21 +58,14 @@ public class ConversationManager {
 					sessionId = -1;
 					currentUser = null;
 				}
-				if (callback != null)
-					callback.onSuccess(sessionUser == null ? null : sessionUser.user);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				if (callback != null)
-					callback.onFailure(caught);
+				NavigationMediator.onSuccessLoginCallbacks(sessionUser == null ? null : sessionUser.user);
 			}
 		});
 	}
 
-	public static void logout(final AsyncCallback<Boolean> callback) {
+	public static void logout() {
 		if (sessionId != -1)
-			SERVICE.logout(sessionId, new AsyncCallback<Boolean>() {
+			SERVICE.logout(sessionId, new ConversationCallback<Boolean>() {
 				@Override
 				public void onSuccess(Boolean result) {
 					if (result) {
@@ -84,14 +73,7 @@ public class ConversationManager {
 						currentUser = null;
 						Cookies.removeCookie(COOKIE_NAME, "/");
 					}
-					if (callback != null)
-						callback.onSuccess(result);
-				}
-
-				@Override
-				public void onFailure(Throwable caught) {
-					if (callback != null)
-						callback.onFailure(caught);
+					NavigationMediator.onSuccessLogoutCallbacks(result);
 				}
 			});
 	}

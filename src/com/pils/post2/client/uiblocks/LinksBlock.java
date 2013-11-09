@@ -13,11 +13,14 @@ public class LinksBlock extends Composite {
 	private FlowPanel mainPanel = GWT.create(FlowPanel.class);
 	private Label title = GWT.create(Label.class);
 
-	public LinksBlock(String header) {
+	public LinksBlock() {
 		mainPanel.addStyleName(Resources.INSTANCE.css().block());
-		title.setText(header);
 		mainPanel.add(title);
 		initWidget(mainPanel);
+	}
+
+	public void setTitle(String header) {
+		title.setText(header);
 	}
 
 	public void setCategories(List<Entity> entities) {

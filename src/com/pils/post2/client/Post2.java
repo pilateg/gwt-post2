@@ -8,12 +8,12 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.pils.post2.client.layout.Resources;
+import com.pils.post2.client.uiblocks.*;
 import com.pils.post2.shared.conversation.ConversationCallback;
 import com.pils.post2.shared.conversation.ConversationManager;
 import com.pils.post2.shared.dto.Entity;
 import com.pils.post2.shared.dto.Section;
 import com.pils.post2.shared.dto.User;
-import com.pils.post2.client.uiblocks.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +31,24 @@ public class Post2 implements EntryPoint {
 				logger.log(Level.SEVERE, "!!:", unwrap(e));
 			}
 		});
-		NavigationMediator.init(new LoginBlock(), new ContentBlock());
-		ConversationManager.restoreSession(new ConversationCallback<User>() {
+		NavigationMediator.init(new LoginBlock(), new ContentBlock(), new LinksBlock());
+		NavigationMediator.addLoginCallback(new ConversationCallback<User>() {
 			@Override
 			public void onSuccess(User user) {
-				NavigationMediator.getLoginBlock().setMode(user);
+				NavigationMediator.getLoginBlock().setUser(user);
+				NavigationMediator.getSectionsBlock().setTitle("my sections");
 			}
 		});
+		NavigationMediator.addLogoutCallback(new ConversationCallback<Boolean>() {
+			@Override
+			public void onSuccess(Boolean result) {
+				if (result) {
+					NavigationMediator.getLoginBlock().setUser(null);
+					NavigationMediator.getSectionsBlock().setTitle("links");
+				}
+			}
+		});
+		ConversationManager.restoreSession();
 		Resources.INSTANCE.css().ensureInjected();
 		init();
 	}
@@ -56,7 +67,8 @@ public class Post2 implements EntryPoint {
 			section.setTitle("tag_name" + i);
 			entities.add(section);
 		}
-		LinksBlock linksBlock = new LinksBlock("links");
+		LinksBlock linksBlock = NavigationMediator.getSectionsBlock();
+		linksBlock.setTitle("links");
 		linksBlock.setCategories(entities.subList(2, 4));
 		east.add(linksBlock);
 		blockHandler.addEast(east, 200);
