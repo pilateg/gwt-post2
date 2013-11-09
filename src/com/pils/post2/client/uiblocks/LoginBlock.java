@@ -2,21 +2,25 @@ package com.pils.post2.client.uiblocks;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.pils.post2.client.layout.Resources;
+import com.pils.post2.client.layout.widgets.Button;
 import com.pils.post2.shared.conversation.ConversationCallback;
 import com.pils.post2.shared.conversation.ConversationManager;
 import com.pils.post2.shared.dto.User;
-import com.pils.post2.client.layout.Resources;
-import com.pils.post2.client.layout.UiBlock;
-import com.pils.post2.client.layout.widgets.Button;
 
-public class LoginBlock extends UiBlock {
-	interface LoginBlockUiBinder extends UiBinder<FlowPanel, LoginBlock> {}
+public class LoginBlock extends Composite {
+	interface LoginBlockUiBinder extends UiBinder<FlowPanel, LoginBlock> {
+	}
 
 	private static LoginBlockUiBinder uiBinder = GWT.create(LoginBlockUiBinder.class);
 
@@ -44,8 +48,15 @@ public class LoginBlock extends UiBlock {
 		mainPanel.addStyleName(Resources.INSTANCE.css().block());
 		name.getElement().setAttribute("placeholder", "name");
 		pass.getElement().setAttribute("placeholder", "pass");
-		name.setText("name");
-		pass.setText("pass");
+		KeyPressHandler keyPressHandler = new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == KeyCodes.KEY_ENTER)
+					login();
+			}
+		};
+		name.addKeyPressHandler(keyPressHandler);
+		pass.addKeyPressHandler(keyPressHandler);
 		loginButton.setText("Log in");
 		registerButton.setText("Register");
 	}
@@ -63,14 +74,18 @@ public class LoginBlock extends UiBlock {
 		}
 	}
 
-	@UiHandler("loginButton")
-	void loginClick(ClickEvent e) {
+	private void login() {
 		ConversationManager.login(name.getText(), pass.getText(), new ConversationCallback<User>() {
 			@Override
 			public void onSuccess(User user) {
 				setMode(user);
 			}
 		});
+	}
+
+	@UiHandler("loginButton")
+	void loginClick(ClickEvent e) {
+		login();
 	}
 
 	@UiHandler("logoutButton")

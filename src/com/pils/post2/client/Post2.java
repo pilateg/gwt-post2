@@ -6,6 +6,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.pils.post2.client.layout.Resources;
 import com.pils.post2.shared.conversation.ConversationCallback;
 import com.pils.post2.shared.conversation.ConversationManager;
 import com.pils.post2.shared.dto.Entity;
@@ -37,6 +39,7 @@ public class Post2 implements EntryPoint {
 				loginBlock.setMode(user);
 			}
 		});
+		Resources.INSTANCE.css().ensureInjected();
 		init();
 	}
 
@@ -46,9 +49,10 @@ public class Post2 implements EntryPoint {
 		final ContentBlock contentBlock = new ContentBlock();
 		NavigationMediator.init(contentBlock);
 
-		DockLayoutPanel east = new DockLayoutPanel(Style.Unit.PX);
-		east.addNorth(loginBlock, 200);
-		east.addNorth(new SearchBlock(), 200);
+		VerticalPanel east = new VerticalPanel();
+		east.addStyleName(Resources.INSTANCE.css().sidePanel());
+		east.add(loginBlock);
+		east.add(new SearchBlock());
 		final List<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < 4; ++i) {
 			Section section = new Section();
@@ -57,13 +61,13 @@ public class Post2 implements EntryPoint {
 		}
 		LinksBlock linksBlock = new LinksBlock("links");
 		linksBlock.setCategories(entities.subList(2, 4));
-		east.addNorth(linksBlock, 200);
+		east.add(linksBlock);
 		blockHandler.addEast(east, 200);
 		final DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
 		BreadcrumbBlock breadcrumb = new BreadcrumbBlock();
 		breadcrumb.addBreadcrumb(entities.get(0));
 		breadcrumb.addBreadcrumb(entities.get(1));
-		center.addNorth(breadcrumb, 40);
+		center.addNorth(breadcrumb, 50);
 		final NavigationBlock navigation = new NavigationBlock();
 		final int itemsNumber = 20;
 		navigation.setUp(itemsNumber, 7);

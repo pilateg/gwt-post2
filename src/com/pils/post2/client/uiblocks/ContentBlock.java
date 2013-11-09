@@ -12,12 +12,11 @@ import com.pils.post2.shared.dto.Entity;
 import com.pils.post2.shared.dto.Entry;
 import com.pils.post2.shared.dto.Section;
 import com.pils.post2.client.layout.Resources;
-import com.pils.post2.client.layout.UiBlock;
 import com.pils.post2.client.layout.widgets.Button;
 
 import java.util.List;
 
-public class ContentBlock extends UiBlock {
+public class ContentBlock extends Composite {
 
 	private FlowPanel mainPanel;
 	private Button addEntry;
@@ -64,6 +63,7 @@ public class ContentBlock extends UiBlock {
 							popupPanel.hide();
 							title.setText("");
 							content.setText("");
+							//add entry to db and update
 							mainPanel.add(new EntryBlock(entry));
 						}
 					}

@@ -2,24 +2,18 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:w='urn:import:com.pils.post2.client.layout.widgets'>
 	<ui:style>
-		.mainPanel {
-			position: relative;
-			width: 200px;
-			height: 100px;
-		}
-
-		.mainPanel > * {
-			float: left;
+		.panel > * {
+			margin: 2px;
 		}
 	</ui:style>
-	<g:FlowPanel ui:field="mainPanel" styleName="{style.mainPanel}">
-		<g:FlowPanel ui:field="loginPanel">
+	<g:FlowPanel ui:field="mainPanel">
+		<g:FlowPanel ui:field="loginPanel" styleName="{style.panel}">
 			<g:TextBox ui:field="name"/>
 			<g:TextBox ui:field="pass"/>
 			<w:Button ui:field="loginButton"/>
 			<w:Button ui:field="registerButton"/>
 		</g:FlowPanel>
-		<g:FlowPanel ui:field="loggedPanel" visible="false">
+		<g:FlowPanel ui:field="loggedPanel" visible="false" styleName="{style.panel}">
 			<g:Label ui:field="userName"/>
 			<w:Button ui:field="logoutButton" text="log out"/>
 		</g:FlowPanel>

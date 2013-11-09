@@ -35,6 +35,7 @@ public class NavigationMediator {
 			entry.setComments(new ArrayList<Comment>(){{add(comment);}});
 			entries.add(entry);
 		}
+
 		return new NavigationBlock.PageSelectionHandler() {
 			@Override
 			public void onPageSelected(int pageNumber, int itemsOnPage) {
@@ -43,7 +44,7 @@ public class NavigationMediator {
 					return;
 				}
 				int from = pageNumber * itemsOnPage;
-				int to = from + itemsOnPage > itemsNumber + 1 ? itemsNumber + 1 : from + itemsOnPage;
+				int to = from + itemsOnPage > itemsNumber ? itemsNumber : from + itemsOnPage;
 				contentBlock.setEntries(entries.subList(from, to));
 			}
 		};
