@@ -4,10 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.pils.post2.client.NavigationMediator;
-import com.pils.post2.shared.dto.Comment;
-import com.pils.post2.shared.dto.Entry;
-import com.pils.post2.shared.dto.SessionUser;
-import com.pils.post2.shared.dto.User;
+import com.pils.post2.shared.dto.*;
 
 import java.util.Date;
 
@@ -88,5 +85,9 @@ public class ConversationManager {
 
 	public static void addEntry(Entry entry, AsyncCallback<Boolean> callback) {
 		SERVICE.addEntry(sessionId, entry, callback);
+	}
+
+	public static void addSection(Section section, AsyncCallback<Boolean> callback) {
+		SERVICE.addSection(sessionId, section, callback);
 	}
 }
