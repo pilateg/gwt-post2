@@ -9,6 +9,10 @@ public class ClientUtils {
 		return s.replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;").replace("\"","&quot;");
 	}
 
+	public static String trim(String str, int length) {
+		return str.length() < length ? str : str.substring(0, length - 1) + "…";
+	}
+
 	public static void log(Object... args) {
 		if (isSupported())
 			for (Object o : args)

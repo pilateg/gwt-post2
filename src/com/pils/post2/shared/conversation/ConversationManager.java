@@ -80,6 +80,10 @@ public class ConversationManager {
 		return currentUser;
 	}
 
+	public static int getItemsOnPage() {
+		return 7;
+	}
+
 	public static void addComment(Comment comment, AsyncCallback<Boolean> callback) {
 		SERVICE.addComment(sessionId, comment, callback);
 	}
@@ -98,5 +102,13 @@ public class ConversationManager {
 
 	public static void fetchUsers(String query, AsyncCallback<List<User>> callback) {
 		SERVICE.fetchUsers(sessionId, query, callback);
+	}
+
+	public static void lightSearch(String query, AsyncCallback<List<? extends Entity>> callback) {
+		SERVICE.lightSearch(sessionId, query, callback);
+	}
+
+	public static void search(String query, AsyncCallback<List<? extends Entity>> callback) {
+		SERVICE.search(sessionId, query, callback);
 	}
 }

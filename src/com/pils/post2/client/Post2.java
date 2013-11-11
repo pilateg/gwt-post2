@@ -11,12 +11,8 @@ import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.uiblocks.*;
 import com.pils.post2.shared.conversation.ConversationCallback;
 import com.pils.post2.shared.conversation.ConversationManager;
-import com.pils.post2.shared.dto.Entity;
-import com.pils.post2.shared.dto.Section;
 import com.pils.post2.shared.dto.User;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +28,7 @@ public class Post2 implements EntryPoint {
 			}
 		});
 		final NavigationBlock navigation = new NavigationBlock();
-		navigation.setUp(20, 7);
+		navigation.setUp(20, ConversationManager.getItemsOnPage());
 		navigation.setPageSelectionHandler(NavigationMediator.getPageSelectionHandler());
 		NavigationMediator.init(new LoginBlock(), new ContentBlock(), new LinksBlock(), new BreadcrumbBlock(), navigation);
 		NavigationMediator.addLoginCallback(new ConversationCallback<User>() {

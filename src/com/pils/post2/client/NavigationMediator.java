@@ -2,6 +2,7 @@ package com.pils.post2.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.pils.post2.client.uiblocks.*;
+import com.pils.post2.shared.conversation.ConversationManager;
 import com.pils.post2.shared.dto.*;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class NavigationMediator {
 						Section section = (Section) e;
 						contentBlock.setEntries(section.getEntries());
 						navigationBlock.setVisible(true);
-						navigationBlock.setUp(section.getEntries().size(), 7);
+						navigationBlock.setUp(section.getEntries().size(), ConversationManager.getItemsOnPage());
 						navigationBlock.setCurrentPage(0);
 						break;
 					case Tag:

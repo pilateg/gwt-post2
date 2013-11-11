@@ -7,7 +7,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.*;
-import com.pils.post2.client.ClientUtils;
 import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.widgets.Button;
 import com.pils.post2.shared.conversation.ConversationCallback;
@@ -50,9 +49,8 @@ public class LinksBlock extends Composite {
 					@Override
 					public void onSuccess(List<User> result) {
 						List<Suggestion> suggestions = new ArrayList<Suggestion>();
-						ClientUtils.log(result);
 						for (User user : result)
-							suggestions.add(new MultiWordSuggestOracle.MultiWordSuggestion(user.getName()+", ", user.getName()));
+							suggestions.add(new MultiWordSuggestOracle.MultiWordSuggestion(user.getName() + ", ", user.getName()));
 						callback.onSuggestionsReady(request, new Response(suggestions));
 					}
 				});

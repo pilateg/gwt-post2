@@ -95,4 +95,14 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 		users.add(user);
 		return users;
 	}
+
+	@Override
+	public List<? extends Entity> lightSearch(long sessionId, String query) {
+		return fetchUsers(sessionId, query);
+	}
+
+	@Override
+	public List<? extends Entity> search(long sessionId, String query) {
+		return fetchUsers(sessionId, query);
+	}
 }
