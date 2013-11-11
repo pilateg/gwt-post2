@@ -63,30 +63,20 @@ public class NavigationMediator {
 		return new EntityBlock.EntitySelectionHandler() {
 			@Override
 			public void onEntitySelected(Entity e) {
+				breadcrumbBlock.setBreadcrumb(e);
 				switch (e.getType()) {
 					case Comment:
 						Comment comment = (Comment) e;
-						breadcrumbBlock.clear();
-						breadcrumbBlock.addBreadcrumb(comment.getEntry().getSection().getOwner());
-						breadcrumbBlock.addBreadcrumb(comment.getEntry().getSection());
-						breadcrumbBlock.addBreadcrumb(comment.getEntry());
 						contentBlock.setEntry(comment);
 						navigationBlock.setVisible(false);
 						break;
 					case Entry:
 						Entry entry = (Entry) e;
-						breadcrumbBlock.clear();
-						breadcrumbBlock.addBreadcrumb(entry.getSection().getOwner());
-						breadcrumbBlock.addBreadcrumb(entry.getSection());
-						breadcrumbBlock.addBreadcrumb(entry);
 						contentBlock.setEntry(entry);
 						navigationBlock.setVisible(false);
 						break;
 					case Section:
 						Section section = (Section) e;
-						breadcrumbBlock.clear();
-						breadcrumbBlock.addBreadcrumb(section.getOwner());
-						breadcrumbBlock.addBreadcrumb(section);
 						contentBlock.setEntries(section.getEntries());
 						navigationBlock.setVisible(true);
 						navigationBlock.setUp(section.getEntries().size(), 7);
