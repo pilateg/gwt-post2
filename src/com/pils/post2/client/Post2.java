@@ -31,7 +31,10 @@ public class Post2 implements EntryPoint {
 				logger.log(Level.SEVERE, "!!:", unwrap(e));
 			}
 		});
-		NavigationMediator.init(new LoginBlock(), new ContentBlock(), new LinksBlock());
+		final NavigationBlock navigation = new NavigationBlock();
+		navigation.setUp(20, 7);
+		navigation.setPageSelectionHandler(NavigationMediator.getPageSelectionHandler());
+		NavigationMediator.init(new LoginBlock(), new ContentBlock(), new LinksBlock(), new BreadcrumbBlock(), navigation);
 		NavigationMediator.addLoginCallback(new ConversationCallback<User>() {
 			@Override
 			public void onSuccess(User user) {
@@ -45,6 +48,7 @@ public class Post2 implements EntryPoint {
 				if (result) {
 					NavigationMediator.getLoginBlock().setUser(null);
 					NavigationMediator.getSectionsBlock().setUser(null);
+					NavigationMediator.getBreadcrumbBlock().clear();
 				}
 			}
 		});
@@ -61,27 +65,14 @@ public class Post2 implements EntryPoint {
 		east.addStyleName(Resources.INSTANCE.css().sidePanel());
 		east.add(NavigationMediator.getLoginBlock());
 		east.add(new SearchBlock());
-		final List<Entity> entities = new ArrayList<Entity>();
-		for (int i = 0; i < 4; ++i) {
-			Section section = new Section();
-			section.setTitle("tag_name" + i);
-			entities.add(section);
-		}
 		if (ConversationManager.getCurrentUser() == null)
 			NavigationMediator.getSectionsBlock().setUser(null);
 		east.add(NavigationMediator.getSectionsBlock());
 		blockHandler.addEast(east, 200);
 		final DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
-		BreadcrumbBlock breadcrumb = new BreadcrumbBlock();
-		breadcrumb.addBreadcrumb(entities.get(0));
-		breadcrumb.addBreadcrumb(entities.get(1));
-		center.addNorth(breadcrumb, 50);
-		final NavigationBlock navigation = new NavigationBlock();
-		final int itemsNumber = 20;
-		navigation.setUp(itemsNumber, 7);
-		center.addSouth(navigation, 100);
-		navigation.setPageSelectionHandler(NavigationMediator.getPageSelectionHandler());
-		navigation.setCurrentPage(0);
+		center.addNorth(NavigationMediator.getBreadcrumbBlock(), 50);
+		center.addSouth(NavigationMediator.getNavigationBlock(), 100);
+		NavigationMediator.getNavigationBlock().setCurrentPage(0);
 		center.add(NavigationMediator.getContentBlock());
 		blockHandler.add(center);
 	}

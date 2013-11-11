@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.pils.post2.shared.dto.Entity;
 
 public class BreadcrumbBlock extends Composite {
+
 	private FlowPanel mainPanel = GWT.create(FlowPanel.class);
 
 	public BreadcrumbBlock() {
@@ -28,6 +29,10 @@ public class BreadcrumbBlock extends Composite {
 			return block;
 		}
 		return null;
+	}
+
+	public void clear() {
+		mainPanel.clear();
 	}
 
 	public interface BreadcrumbResources extends ClientBundle {

@@ -73,7 +73,7 @@ public class ContentBlock extends Composite {
 		initWidget(scrollPanel);
 	}
 
-	public void setEntries(List<Entity> entities) {
+	public void setEntries(List<? extends Entity> entities) {
 		resetPanel(entities == null || entities.isEmpty() ? null : entities.get(0));
 		if (entities != null)
 			for (Entity entity : entities)

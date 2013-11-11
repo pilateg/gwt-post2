@@ -68,7 +68,7 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 			for (int i = 0; i < 4; i++) {
 				Section section = new Section();
 				section.setOwner(user);
-				section.setTitle("section 1");
+				section.setTitle("section " + i);
 				List<Entry> entries = new ArrayList<Entry>(20);
 				for (int j = 0; j < 20; ++j) {
 					Entry entry = new Entry();
