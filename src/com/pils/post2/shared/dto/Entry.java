@@ -7,7 +7,6 @@ public class Entry extends Entity {
 	private Section section;
 	private String content;
 	private List<Tag> tags;
-	transient
 	private List<Comment> comments;
 
 	@Override

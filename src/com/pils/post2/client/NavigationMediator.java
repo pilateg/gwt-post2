@@ -2,10 +2,7 @@ package com.pils.post2.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.pils.post2.client.uiblocks.*;
-import com.pils.post2.shared.dto.Comment;
-import com.pils.post2.shared.dto.Entity;
-import com.pils.post2.shared.dto.Entry;
-import com.pils.post2.shared.dto.User;
+import com.pils.post2.shared.dto.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,16 +14,21 @@ public class NavigationMediator {
 	private static LoginBlock loginBlock;
 	private static ContentBlock contentBlock;
 	private static LinksBlock sectionsBlock;
+	private static BreadcrumbBlock breadcrumbBlock;
+	private static NavigationBlock navigationBlock;
 	private static List<AsyncCallback<User>> loginCallbacks = new LinkedList<AsyncCallback<User>>();
 	private static List<AsyncCallback<Boolean>> logoutCallbacks = new LinkedList<AsyncCallback<Boolean>>();
 
 	private NavigationMediator() {
 	}
 
-	public static void init(LoginBlock login, ContentBlock content, LinksBlock links) {
+	public static void init(LoginBlock login, ContentBlock content, LinksBlock links, BreadcrumbBlock breadcrumb,
+	                        NavigationBlock navigation) {
 		loginBlock = login;
 		contentBlock = content;
 		sectionsBlock = links;
+		breadcrumbBlock = breadcrumb;
+		navigationBlock = navigation;
 	}
 
 	public static NavigationBlock.PageSelectionHandler getPageSelectionHandler() {
@@ -61,8 +63,33 @@ public class NavigationMediator {
 		return new EntityBlock.EntitySelectionHandler() {
 			@Override
 			public void onEntitySelected(Entity e) {
+				breadcrumbBlock.setBreadcrumb(e);
+				switch (e.getType()) {
+					case Comment:
+						Comment comment = (Comment) e;
+						contentBlock.setEntry(comment);
+						navigationBlock.setVisible(false);
+						break;
+					case Entry:
+						Entry entry = (Entry) e;
+						contentBlock.setEntry(entry);
+						navigationBlock.setVisible(false);
+						break;
+					case Section:
+						Section section = (Section) e;
+						contentBlock.setEntries(section.getEntries());
+						navigationBlock.setVisible(true);
+						navigationBlock.setUp(section.getEntries().size(), 7);
+						navigationBlock.setCurrentPage(0);
+						break;
+					case Tag:
+						//get entities by tag
+						break;
+					case User:
+						//show user card
+						break;
+				}
 				//update breadcrumb, navigation
-				contentBlock.setEntry(e);
 			}
 		};
 	}
@@ -117,5 +144,13 @@ public class NavigationMediator {
 
 	public static LinksBlock getSectionsBlock() {
 		return sectionsBlock;
+	}
+
+	public static BreadcrumbBlock getBreadcrumbBlock() {
+		return breadcrumbBlock;
+	}
+
+	public static NavigationBlock getNavigationBlock() {
+		return navigationBlock;
 	}
 }
