@@ -6,9 +6,7 @@ public class Section extends Entity {
 	private String title;
 	private User owner;
 	private boolean openForAll;
-	transient
 	private List<User> usersWithAccess;
-	transient
 	private List<Entry> entries;
 
 	@Override
