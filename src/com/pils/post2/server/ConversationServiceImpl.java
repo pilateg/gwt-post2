@@ -84,4 +84,15 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 		}
 		return null;
 	}
+
+	@Override
+	public List<User> fetchUsers(long sessionId, String query) {
+		if (!sessions.containsKey(sessionId) || !"name".contains(query))
+			return null;
+		final User user = new User();
+		user.setName("name");
+		List<User> users = new ArrayList<User>();
+		users.add(user);
+		return users;
+	}
 }

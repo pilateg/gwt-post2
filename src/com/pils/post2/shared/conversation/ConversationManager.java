@@ -95,4 +95,8 @@ public class ConversationManager {
 	public static void fetchSections(AsyncCallback<List<Section>> callback) {
 		SERVICE.fetchSections(sessionId, callback);
 	}
+
+	public static void fetchUsers(String query, AsyncCallback<List<User>> callback) {
+		SERVICE.fetchUsers(sessionId, query, callback);
+	}
 }

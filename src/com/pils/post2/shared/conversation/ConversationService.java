@@ -22,4 +22,6 @@ public interface ConversationService extends RemoteService {
 	boolean addSection(long sessionId, Section section);
 
 	List<Section> fetchSections(long sessionId);
+
+	List<User> fetchUsers(long sessionId, String query);
 }

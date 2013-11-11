@@ -19,4 +19,6 @@ public interface ConversationServiceAsync {
 	void addSection(long sessionId, Section section, AsyncCallback<Boolean> async);
 
 	void fetchSections(long sessionId, AsyncCallback<List<Section>> async);
+
+	void fetchUsers(long sessionId, String query, AsyncCallback<List<User>> async);
 }
