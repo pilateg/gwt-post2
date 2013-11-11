@@ -7,6 +7,7 @@ import com.pils.post2.client.NavigationMediator;
 import com.pils.post2.shared.dto.*;
 
 import java.util.Date;
+import java.util.List;
 
 public class ConversationManager {
 
@@ -89,5 +90,9 @@ public class ConversationManager {
 
 	public static void addSection(Section section, AsyncCallback<Boolean> callback) {
 		SERVICE.addSection(sessionId, section, callback);
+	}
+
+	public static void fetchSections(AsyncCallback<List<Section>> callback) {
+		SERVICE.fetchSections(sessionId, callback);
 	}
 }

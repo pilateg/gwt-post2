@@ -11,6 +11,7 @@ import com.pils.post2.shared.conversation.ConversationManager;
 import com.pils.post2.shared.dto.Entity;
 import com.pils.post2.client.layout.Resources;
 import com.pils.post2.shared.dto.Section;
+import com.pils.post2.shared.dto.User;
 
 import java.util.List;
 
@@ -67,11 +68,23 @@ public class LinksBlock extends Composite {
 		initWidget(mainPanel);
 	}
 
-	public void setTitle(String header) {
-		title.setText(header);
+	public void setUser(User user) {
+		if (user == null) {
+			title.setText("links");
+			addSection.setVisible(false);
+		} else {
+			title.setText("my sections");
+			addSection.setVisible(true);
+		}
+		ConversationManager.fetchSections(new ConversationCallback<List<Section>>() {
+			@Override
+			public void onSuccess(List<Section> sections) {
+				setCategories(sections);
+			}
+		});
 	}
 
-	public void setCategories(List<Entity> entities) {
+	public void setCategories(List<? extends Entity> entities) {
 		mainPanel.clear();
 		mainPanel.add(addSection);
 		mainPanel.add(title);

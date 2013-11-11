@@ -36,7 +36,7 @@ public class Post2 implements EntryPoint {
 			@Override
 			public void onSuccess(User user) {
 				NavigationMediator.getLoginBlock().setUser(user);
-				NavigationMediator.getSectionsBlock().setTitle("my sections");
+				NavigationMediator.getSectionsBlock().setUser(user);
 			}
 		});
 		NavigationMediator.addLogoutCallback(new ConversationCallback<Boolean>() {
@@ -44,7 +44,7 @@ public class Post2 implements EntryPoint {
 			public void onSuccess(Boolean result) {
 				if (result) {
 					NavigationMediator.getLoginBlock().setUser(null);
-					NavigationMediator.getSectionsBlock().setTitle("links");
+					NavigationMediator.getSectionsBlock().setUser(null);
 				}
 			}
 		});
@@ -67,10 +67,9 @@ public class Post2 implements EntryPoint {
 			section.setTitle("tag_name" + i);
 			entities.add(section);
 		}
-		LinksBlock linksBlock = NavigationMediator.getSectionsBlock();
-		linksBlock.setTitle("links");
-		linksBlock.setCategories(entities.subList(2, 4));
-		east.add(linksBlock);
+		if (ConversationManager.getCurrentUser() == null)
+			NavigationMediator.getSectionsBlock().setUser(null);
+		east.add(NavigationMediator.getSectionsBlock());
 		blockHandler.addEast(east, 200);
 		final DockLayoutPanel center = new DockLayoutPanel(Style.Unit.PX);
 		BreadcrumbBlock breadcrumb = new BreadcrumbBlock();
