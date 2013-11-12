@@ -1,5 +1,6 @@
 @def backColor #cce;
 @def borderColor #445;
+@eval buttonWidth "30px";
 
 textarea {
 	resize: vertical;
@@ -13,7 +14,22 @@ textarea {
 	margin: 4px;
 }
 
-.sidePanel {
-	table-layout: fixed;
+.navigationPanel {
 	width: 100%;
+	height: 40px;
+	padding: 0 4px;
+	table-layout: fixed;
+}
+
+.leftButton, .rightButton {
+	position: relative;
+	width: buttonWidth;
+}
+
+.leftButton {
+	float: left;
+}
+
+.rightButton {
+	float: right;
 }
