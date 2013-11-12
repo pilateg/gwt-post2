@@ -2,9 +2,13 @@ package com.pils.post2.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.pils.post2.client.layout.Resources;
+import com.pils.post2.client.uiblocks.MainBlock;
+import com.pils.post2.client.uiblocks.MenuBlock;
 import com.pils.post2.shared.conversation.ConversationManager;
 
 import java.util.logging.Level;
@@ -27,7 +31,10 @@ public class Post2 implements EntryPoint {
 	}
 
 	public static void init() {
-		RootLayoutPanel.get().add(Workspace.INSTANCE);
+		DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
+		panel.addEast(MenuBlock.INSTANCE, 200);
+		panel.add(MainBlock.INSTANCE);
+		RootLayoutPanel.get().add(panel);
 	}
 
 	public static Throwable unwrap(Throwable e) {
