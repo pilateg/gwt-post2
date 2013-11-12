@@ -13,13 +13,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.pils.post2.client.layout.widgets.Button;
 import com.pils.post2.shared.conversation.ConversationCallback;
 import com.pils.post2.shared.conversation.ConversationManager;
-import com.pils.post2.shared.dto.Comment;
-import com.pils.post2.shared.dto.Entity;
-import com.pils.post2.shared.dto.Entry;
-import com.pils.post2.shared.dto.Section;
+import com.pils.post2.shared.dto.*;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainBlock extends Composite {
@@ -39,17 +34,11 @@ public class MainBlock extends Composite {
 	@UiField protected FlowPanel navigationPanel;
 
 	private int itemsNumber;
-	private int itemsOnPage;
+	private int itemsOnPage = -1;
 	private int pagesNumber;
 	private int currentPage = -1;
-	private Section currentSection;
 
 	private MainBlock() {
-		initContentBlock();
-		initWidget(uiBinder.createAndBindUi(this));
-	}
-
-	private void initContentBlock() {
 		final TextBox title = new TextBox();
 		addEntryPopup.addWidget(title);
 		final TextArea content = new TextArea();
@@ -63,7 +52,8 @@ public class MainBlock extends Composite {
 						final Entry entry = new Entry();
 						entry.setTitle(title.getText());
 						entry.setContent(content.getText());
-						entry.setSection(currentSection);
+						if (MenuBlock.INSTANCE.currentEntity instanceof Section)
+							entry.setSection((Section) MenuBlock.INSTANCE.currentEntity);
 						ConversationManager.addEntry(entry, new ConversationCallback<Boolean>() {
 							@Override
 							public void onSuccess(Boolean result) {
@@ -71,7 +61,7 @@ public class MainBlock extends Composite {
 									addEntryPopup.hide();
 									title.setText("");
 									content.setText("");
-									//add entry to db and update
+									//update content panel
 									contentPanel.add(new EntryBlock(entry));
 								}
 							}
@@ -87,12 +77,13 @@ public class MainBlock extends Composite {
 					}
 				}
 		);
+		setUp(ConversationManager.getItemsOnPage());
+		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	protected void setUp(int itemsNumber, int itemsOnPage) {
-		if (itemsNumber != this.itemsNumber || itemsOnPage != this.itemsOnPage) {
+	protected void setUp(int itemsOnPage) {
+		if (itemsOnPage != this.itemsOnPage) {
 			pagesNumber = itemsNumber / itemsOnPage + (itemsNumber % itemsOnPage == 0 ? 0 : 1);
-			this.itemsNumber = itemsNumber;
 			this.itemsOnPage = itemsOnPage;
 			navigationPanel.clear();
 			for (int i = 0; i < pagesNumber; ++i) {
@@ -120,85 +111,60 @@ public class MainBlock extends Composite {
 			previousButton.setEnabled(currentPage != 0);
 			nextButton.setEnabled(currentPage != pagesNumber - 1);
 			lastButton.setEnabled(currentPage != pagesNumber - 1);
-			onPageSelected(currentPage, itemsOnPage);
+			if (currentPage == -1)
+				contentPanel.clear();
+			else
+				ConversationManager.fetchEntities(MenuBlock.INSTANCE.currentEntity, currentPage * itemsOnPage, itemsOnPage,
+						new ConversationCallback<EntitiesList>() {
+							@Override
+							public void onSuccess(EntitiesList result) {
+								setEntries(result.entities);
+								itemsNumber = result.number;
+							}
+						});
 		}
-	}
-
-	private void onPageSelected(int pageNumber, int itemsOnPage) {
-		int itemsNumber = 20;
-		List<Entity> entries = new ArrayList<Entity>(itemsNumber);
-		for (int i = 0; i < itemsNumber; ++i) {
-			Entry entry = new Entry();
-			entry.setTitle("entry" + i);
-			entry.setContent("<b>" + i + "</b>");
-			final Comment comment = new Comment();
-			comment.setDate(new Date());
-			comment.setContent("blabla" + i);
-			entry.setComments(new ArrayList<Comment>(){{add(comment);}});
-			entries.add(entry);
-		}
-
-		if (pageNumber == -1) {
-			contentPanel.clear();
-			return;
-		}
-		int from = pageNumber * itemsOnPage;
-		int to = from + itemsOnPage > itemsNumber ? itemsNumber : from + itemsOnPage;
-		setEntries(entries.subList(from, to));
 	}
 
 	protected void setBreadcrumb(Entity entity) {
 		breadcrumbPanel.clear();
-		switch (entity.getType()) {
-			case Comment:
-				Comment comment = (Comment) entity;
-				breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry().getSection().getOwner()));
-				breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry().getSection()));
-				breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry()));
-				break;
-			case Entry:
-				Entry entry = (Entry) entity;
-				breadcrumbPanel.add(new EntityLinkBlock(entry.getSection().getOwner()));
-				breadcrumbPanel.add(new EntityLinkBlock(entry.getSection()));
-				breadcrumbPanel.add(new EntityLinkBlock(entry));
-				break;
-			case Section:
-				Section section = (Section) entity;
-				breadcrumbPanel.add(new EntityLinkBlock(section.getOwner()));
-				breadcrumbPanel.add(new EntityLinkBlock(section));
-				break;
-			case Tag:
-			case User:
-				breadcrumbPanel.add(new EntityLinkBlock(entity));
-				break;
-		}
+		try {
+			switch (entity.getType()) {
+				case Comment:
+					Comment comment = (Comment) entity;
+					breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry().getSection().getOwner()));
+					breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry().getSection()));
+					breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry()));
+					break;
+				case Entry:
+					Entry entry = (Entry) entity;
+					breadcrumbPanel.add(new EntityLinkBlock(entry.getSection().getOwner()));
+					breadcrumbPanel.add(new EntityLinkBlock(entry.getSection()));
+					breadcrumbPanel.add(new EntityLinkBlock(entry));
+					break;
+				case Section:
+					Section section = (Section) entity;
+					breadcrumbPanel.add(new EntityLinkBlock(section.getOwner()));
+					breadcrumbPanel.add(new EntityLinkBlock(section));
+					break;
+				case Tag:
+				case User:
+					breadcrumbPanel.add(new EntityLinkBlock(entity));
+					break;
+			}
+		} catch (NullPointerException ignored) {}
 	}
 
-	void setEntries(List<? extends Entity> entities) {
-		resetContentPanel(entities == null || entities.isEmpty() ? null : entities.get(0));
+	protected void setEntries(List<? extends Entity> entities) {
+		contentPanel.clear();
 		if (entities != null)
 			for (Entity entity : entities)
 				contentPanel.add(new EntryBlock(entity));
 	}
 
 	protected void setEntry(Entity entity) {
-		resetContentPanel(entity);
+		contentPanel.clear();
 		if (entity != null)
 			contentPanel.add(new EntryDetailedBlock(entity));
-	}
-
-	private void resetContentPanel(Entity entity) {
-		contentPanel.clear();
-		switch (entity.getType()) {
-			case Entry:
-				currentSection = ((Entry) entity).getSection();
-				break;
-			case Section:
-				currentSection = (Section) entity;
-				break;
-			default:
-				currentSection = null;
-		}
 	}
 
 	@UiHandler("firstButton")

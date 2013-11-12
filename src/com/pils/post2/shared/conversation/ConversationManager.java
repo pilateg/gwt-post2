@@ -107,12 +107,16 @@ public class ConversationManager {
 		SERVICE.fetchUsers(sessionId, query, callback);
 	}
 
-	public static void lightSearch(String query, AsyncCallback<List<? extends Entity>> callback) {
-		SERVICE.lightSearch(sessionId, query, callback);
+	public static void lightSearch(String query, long from, long number, AsyncCallback<List<? extends Entity>> callback) {
+		SERVICE.lightSearch(sessionId, query, from, number, callback);
 	}
 
-	public static void search(String query, AsyncCallback<List<? extends Entity>> callback) {
-		SERVICE.search(sessionId, query, callback);
+	public static void search(String query, long from, long number, AsyncCallback<List<? extends Entity>> callback) {
+		SERVICE.search(sessionId, query, from, number, callback);
+	}
+
+	public static void fetchEntities(Entity parent, int from, int number, AsyncCallback<EntitiesList> callback) {
+		SERVICE.fetchEntities(sessionId, parent, from, number, callback);
 	}
 
 	public static void addLoginCallback(AsyncCallback<User> callback) {

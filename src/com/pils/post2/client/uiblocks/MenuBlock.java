@@ -45,6 +45,7 @@ public class MenuBlock extends Composite {
 	@UiField protected FlowPanel sectionsPanel;
 
 	protected MainBlock mainBlock;
+	protected Entity currentEntity;
 
 	private MenuBlock(MainBlock mainBlock) {
 		this.mainBlock = mainBlock;
@@ -81,16 +82,17 @@ public class MenuBlock extends Composite {
 		searchSuggest = new SuggestBox(new SuggestOracle() {
 			@Override
 			public void requestSuggestions(final Request request, final Callback callback) {
-				ConversationManager.lightSearch(suggestText.getText(), new ConversationCallback<List<? extends Entity>>() {
-					@Override
-					public void onSuccess(List<? extends Entity> result) {
-						List<Suggestion> suggestions = new ArrayList<Suggestion>();
-						if (result != null)
-							for (Entity entity : result)
-								suggestions.add(new EntitySuggestion(null, ClientUtils.trim(entity.getTitle(), 50)));
-						callback.onSuggestionsReady(request, new Response(suggestions));
-					}
-				});
+				ConversationManager.lightSearch(suggestText.getText(), 0, ConversationManager.getItemsOnPage(),
+						new ConversationCallback<List<? extends Entity>>() {
+							@Override
+							public void onSuccess(List<? extends Entity> result) {
+								List<Suggestion> suggestions = new ArrayList<Suggestion>();
+								if (result != null)
+									for (Entity entity : result)
+										suggestions.add(new EntitySuggestion(null, ClientUtils.trim(entity.getTitle(), 50)));
+								callback.onSuggestionsReady(request, new Response(suggestions));
+							}
+						});
 			}
 		}, suggestText);
 		searchSuggest.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
@@ -194,6 +196,7 @@ public class MenuBlock extends Composite {
 	}
 
 	public void onEntitySelected(Entity e) {
+		currentEntity = e;
 		mainBlock.setBreadcrumb(e);
 		switch (e.getType()) {
 			case Comment:
@@ -210,7 +213,7 @@ public class MenuBlock extends Composite {
 				Section section = (Section) e;
 				mainBlock.setEntries(section.getEntries());
 				mainBlock.navigationPanel.setVisible(true);
-				mainBlock.setUp(section.getEntries().size(), ConversationManager.getItemsOnPage());
+				mainBlock.setUp(ConversationManager.getItemsOnPage());
 				mainBlock.setCurrentPage(0);
 				break;
 			case Tag:
@@ -246,30 +249,32 @@ public class MenuBlock extends Composite {
 	@UiHandler("searchSuggest")
 	void searchKeyPress(KeyPressEvent e) {
 		if (e.getCharCode() == KeyCodes.KEY_ENTER)
-			ConversationManager.search(suggestText.getText(), new ConversationCallback<List<? extends Entity>>() {
-				@Override
-				public void onSuccess(List<? extends Entity> result) {
-					mainBlock.breadcrumbPanel.clear();
-					mainBlock.setEntries(result);
-					mainBlock.navigationPanel.setVisible(true);
-					//mainBlock.setUp(result.size(), ConversationManager.getItemsOnPage());
-					mainBlock.setCurrentPage(0);
-				}
-			});
+			ConversationManager.search(suggestText.getText(), 0, ConversationManager.getItemsOnPage(),
+					new ConversationCallback<List<? extends Entity>>() {
+						@Override
+						public void onSuccess(List<? extends Entity> result) {
+							mainBlock.breadcrumbPanel.clear();
+							mainBlock.setEntries(result);
+							mainBlock.navigationPanel.setVisible(true);
+							//mainBlock.setUp(ConversationManager.getItemsOnPage());
+							mainBlock.setCurrentPage(0);
+						}
+					});
 	}
 
 	@UiHandler("searchButton")
 	void searchClick(ClickEvent e) {
-		ConversationManager.search(suggestText.getText(), new ConversationCallback<List<? extends Entity>>() {
-			@Override
-			public void onSuccess(List<? extends Entity> result) {
-				mainBlock.breadcrumbPanel.clear();
-				mainBlock.setEntries(result);
-				mainBlock.navigationPanel.setVisible(true);
-				//mainBlock.setUp(result.size(), ConversationManager.getItemsOnPage());
-				mainBlock.setCurrentPage(0);
-			}
-		});
+		ConversationManager.search(suggestText.getText(), 0, ConversationManager.getItemsOnPage(),
+				new ConversationCallback<List<? extends Entity>>() {
+					@Override
+					public void onSuccess(List<? extends Entity> result) {
+						mainBlock.breadcrumbPanel.clear();
+						mainBlock.setEntries(result);
+						mainBlock.navigationPanel.setVisible(true);
+						//mainBlock.setUp(ConversationManager.getItemsOnPage());
+						mainBlock.setCurrentPage(0);
+					}
+				});
 	}
 
 	@UiHandler("addSectionButton")
@@ -278,7 +283,7 @@ public class MenuBlock extends Composite {
 			addSectionPopup.center();
 	}
 
-	private class EntitySuggestion extends MultiWordSuggestOracle.MultiWordSuggestion {
+	private static class EntitySuggestion extends MultiWordSuggestOracle.MultiWordSuggestion {
 
 		Entity entity;
 
