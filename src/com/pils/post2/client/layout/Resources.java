@@ -13,6 +13,10 @@ public interface Resources extends ClientBundle {
 	interface Css extends CssResource {
 		String block();
 
-		String sidePanel();
+		String leftButton();
+
+		String navigationPanel();
+
+		String rightButton();
 	}
 }

@@ -3,10 +3,10 @@ package com.pils.post2.shared.conversation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.pils.post2.client.NavigationMediator;
 import com.pils.post2.shared.dto.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ConversationManager {
@@ -17,6 +17,9 @@ public class ConversationManager {
 
 	private static long sessionId = -1;
 	private static User currentUser;
+
+	private static List<AsyncCallback<User>> loginCallbacks = new LinkedList<AsyncCallback<User>>();
+	private static List<AsyncCallback<Boolean>> logoutCallbacks = new LinkedList<AsyncCallback<Boolean>>();
 
 	private ConversationManager() {
 	}
@@ -38,7 +41,7 @@ public class ConversationManager {
 						currentUser = user;
 					} else
 						Cookies.removeCookie(COOKIE_NAME, "/");
-					NavigationMediator.onSuccessLoginCallbacks(user);
+					onSuccessLoginCallbacks(user);
 				}
 			});
 	}
@@ -56,7 +59,7 @@ public class ConversationManager {
 					sessionId = -1;
 					currentUser = null;
 				}
-				NavigationMediator.onSuccessLoginCallbacks(sessionUser == null ? null : sessionUser.user);
+				onSuccessLoginCallbacks(sessionUser == null ? null : sessionUser.user);
 			}
 		});
 	}
@@ -71,7 +74,7 @@ public class ConversationManager {
 						currentUser = null;
 						Cookies.removeCookie(COOKIE_NAME, "/");
 					}
-					NavigationMediator.onSuccessLogoutCallbacks(result);
+					onSuccessLogoutCallbacks(result);
 				}
 			});
 	}
@@ -104,11 +107,47 @@ public class ConversationManager {
 		SERVICE.fetchUsers(sessionId, query, callback);
 	}
 
-	public static void lightSearch(String query, AsyncCallback<List<? extends Entity>> callback) {
-		SERVICE.lightSearch(sessionId, query, callback);
+	public static void lightSearch(String query, long from, long number, AsyncCallback<List<? extends Entity>> callback) {
+		SERVICE.lightSearch(sessionId, query, from, number, callback);
 	}
 
-	public static void search(String query, AsyncCallback<List<? extends Entity>> callback) {
-		SERVICE.search(sessionId, query, callback);
+	public static void search(String query, long from, long number, AsyncCallback<List<? extends Entity>> callback) {
+		SERVICE.search(sessionId, query, from, number, callback);
+	}
+
+	public static void fetchEntities(Entity parent, int from, int number, AsyncCallback<EntitiesList> callback) {
+		SERVICE.fetchEntities(sessionId, parent, from, number, callback);
+	}
+
+	public static void addLoginCallback(AsyncCallback<User> callback) {
+		loginCallbacks.add(callback);
+	}
+
+	public static void removeLoginCallback(AsyncCallback<User> callback) {
+		if (loginCallbacks.contains(callback))
+			loginCallbacks.remove(callback);
+	}
+
+	private static void onSuccessLoginCallbacks(User user) {
+		if (!loginCallbacks.isEmpty())
+			for (AsyncCallback<User> callback : loginCallbacks)
+				if (callback != null)
+					callback.onSuccess(user);
+	}
+
+	public static void addLogoutCallback(AsyncCallback<Boolean> callback) {
+		logoutCallbacks.add(callback);
+	}
+
+	public static void removeLogoutCallback(AsyncCallback<Boolean> callback) {
+		if (logoutCallbacks.contains(callback))
+			logoutCallbacks.remove(callback);
+	}
+
+	private static void onSuccessLogoutCallbacks(Boolean result) {
+		if (!logoutCallbacks.isEmpty())
+			for (AsyncCallback<Boolean> callback : logoutCallbacks)
+				if (callback != null)
+					callback.onSuccess(result);
 	}
 }

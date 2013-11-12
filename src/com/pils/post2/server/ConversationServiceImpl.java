@@ -5,10 +5,7 @@ import com.pils.post2.shared.conversation.ConversationService;
 import com.pils.post2.shared.dto.*;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConversationServiceImpl extends RemoteServiceServlet implements ConversationService {
 
@@ -97,12 +94,30 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 	}
 
 	@Override
-	public List<? extends Entity> lightSearch(long sessionId, String query) {
+	public List<? extends Entity> lightSearch(long sessionId, String query, long from, long number) {
 		return fetchUsers(sessionId, query);
 	}
 
 	@Override
-	public List<? extends Entity> search(long sessionId, String query) {
+	public List<? extends Entity> search(long sessionId, String query, long from, long number) {
 		return fetchUsers(sessionId, query);
+	}
+
+	@Override
+	public EntitiesList fetchEntities(long sessionId, Entity parent, int from, int number) {
+		int itemsNumber = 20;
+		List<Entity> entries = new ArrayList<Entity>(itemsNumber);
+		for (int i = 0; i < itemsNumber; ++i) {
+			Entry entry = new Entry();
+			entry.setTitle("entry" + i);
+			entry.setContent("<b>" + i + "</b>");
+			final Comment comment = new Comment();
+			comment.setDate(new Date());
+			comment.setContent("blabla" + i);
+			entry.setComments(new ArrayList<Comment>(){{add(comment);}});
+			entries.add(entry);
+		}
+		int to = Math.min(from + number, itemsNumber);
+		return new EntitiesList(entries.subList(from, to), entries.size());
 	}
 }
