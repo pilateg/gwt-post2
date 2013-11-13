@@ -218,10 +218,10 @@ public class MenuBlock extends Composite {
 				mainBlock.setCurrentPage(0);
 				break;
 			case Tag:
-				//get entities by tag
+				mainBlock.setCurrentPage(0);
 				break;
 			case User:
-				//show user card
+				mainBlock.setEntry(e);
 				break;
 		}
 		//update navigation
