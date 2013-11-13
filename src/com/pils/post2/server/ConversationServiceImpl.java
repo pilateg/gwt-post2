@@ -94,13 +94,14 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 	}
 
 	@Override
-	public List<? extends Entity> lightSearch(long sessionId, String query, long from, long number) {
+	public List<? extends Entity> lightSearch(long sessionId, String query) {
 		return fetchUsers(sessionId, query);
 	}
 
 	@Override
-	public List<? extends Entity> search(long sessionId, String query, long from, long number) {
-		return fetchUsers(sessionId, query);
+	public EntitiesList search(long sessionId, String query, long from, long number) {
+		List<User> users = fetchUsers(sessionId, query);
+		return new EntitiesList(users, users.size());
 	}
 
 	@Override
@@ -119,5 +120,10 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 		}
 		int to = Math.min(from + number, itemsNumber);
 		return new EntitiesList(entries.subList(from, to), entries.size());
+	}
+
+	@Override
+	public Entry fetchEntry(long sessionId, long entryId) {
+		return null;
 	}
 }
