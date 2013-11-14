@@ -77,15 +77,22 @@ public class MainBlock extends Composite {
 					}
 				}
 		);
-		setUp(ConversationManager.getItemsOnPage());
+		setUp(-1, ConversationManager.getItemsOnPage());
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	protected void setUp(int itemsOnPage) {
-		if (itemsOnPage != this.itemsOnPage) {
-			pagesNumber = itemsNumber / itemsOnPage + (itemsNumber % itemsOnPage == 0 ? 0 : 1);
-			this.itemsOnPage = itemsOnPage;
-			navigationPanel.clear();
+	protected void setUp(int itemsNumber, int itemsOnPage) {
+		if ((itemsNumber != this.itemsNumber && itemsNumber != -1) ||
+				(itemsOnPage != this.itemsOnPage && itemsOnPage != -1)) {
+			if (itemsNumber != -1)
+				this.itemsNumber = itemsNumber;
+			if (itemsOnPage != -1)
+				this.itemsOnPage = itemsOnPage;
+			pagesNumber = this.itemsNumber / this.itemsOnPage + (this.itemsNumber % this.itemsOnPage == 0 ? 0 : 1);
+			if (navigationPanel != null) {
+				navigationPanel.setVisible(pagesNumber != 0);
+				navigationPanel.clear();
+			}
 			for (int i = 0; i < pagesNumber; ++i) {
 				final Button button = new Button(String.valueOf(i + 1));
 				button.getElement().getStyle().setProperty("display", "table-cell");
@@ -105,7 +112,9 @@ public class MainBlock extends Composite {
 		if (currentPage != page) {
 			if (currentPage != -1)
 				((Button) navigationPanel.getWidget(currentPage)).setEnabled(true);
-			((Button) navigationPanel.getWidget(page)).setEnabled(false);
+			try {
+				((Button) navigationPanel.getWidget(page)).setEnabled(false);
+			} catch (IndexOutOfBoundsException ignored) {}
 			currentPage = page;
 			firstButton.setEnabled(currentPage != 0);
 			previousButton.setEnabled(currentPage != 0);
@@ -113,15 +122,27 @@ public class MainBlock extends Composite {
 			lastButton.setEnabled(currentPage != pagesNumber - 1);
 			if (currentPage == -1)
 				contentPanel.clear();
-			else
-				ConversationManager.fetchEntities(MenuBlock.INSTANCE.currentEntity, currentPage * itemsOnPage, itemsOnPage,
-						new ConversationCallback<EntitiesList>() {
-							@Override
-							public void onSuccess(EntitiesList result) {
-								setEntries(result.entities);
-								itemsNumber = result.number;
-							}
-						});
+			else {
+				if (MenuBlock.INSTANCE.currentEntity != null)
+					ConversationManager.fetchEntities(MenuBlock.INSTANCE.currentEntity, currentPage * itemsOnPage, itemsOnPage,
+							new ConversationCallback<EntitiesList>() {
+								@Override
+								public void onSuccess(EntitiesList result) {
+									setEntries(result.entities);
+									setUp(result.number, ConversationManager.getItemsOnPage());
+								}
+							});
+				else if (MenuBlock.INSTANCE.currentSearchQuery != null)
+					ConversationManager.search(MenuBlock.INSTANCE.currentSearchQuery, 0, ConversationManager.getItemsOnPage(),
+							new ConversationCallback<EntitiesList>() {
+								@Override
+								public void onSuccess(EntitiesList result) {
+									breadcrumbPanel.clear();
+									setEntries(result.entities);
+									setUp(result.number, ConversationManager.getItemsOnPage());
+								}
+							});
+			}
 		}
 	}
 
@@ -151,7 +172,7 @@ public class MainBlock extends Composite {
 					breadcrumbPanel.add(new EntityLinkBlock(entity));
 					break;
 			}
-		} catch (NullPointerException ignored) {}
+		} catch (Exception ignored) {}
 	}
 
 	protected void setEntries(List<? extends Entity> entities) {

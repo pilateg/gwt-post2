@@ -22,9 +22,11 @@ public interface ConversationServiceAsync {
 
 	void fetchUsers(long sessionId, String query, AsyncCallback<List<User>> async);
 
-	void lightSearch(long sessionId, String query, long from, long number, AsyncCallback<List<? extends Entity>> async);
+	void lightSearch(long sessionId, String query, AsyncCallback<List<? extends Entity>> async);
 
-	void search(long sessionId, String query, long from, long number, AsyncCallback<List<? extends Entity>> async);
+	void search(long sessionId, String query, long from, long number, AsyncCallback<EntitiesList> async);
 
 	void fetchEntities(long sessionId, Entity parent, int from, int number, AsyncCallback<EntitiesList> async);
+
+	void fetchEntry(long sessionId, long entryId, AsyncCallback<Entry> async);
 }
