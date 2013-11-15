@@ -3,7 +3,7 @@
              xmlns:w='urn:import:com.pils.post2.client.layout.widgets'>
 	<ui:with field="resource" type="com.pils.post2.client.layout.Resources"/>
 	<g:FlowPanel>
-		<g:FlowPanel ui:field="breadcrumbPanel" height="50px"/>
+		<g:FlowPanel ui:field="breadcrumbPanel" height="50px" styleName="{resource.css.floatPanel}"/>
 		<w:Button ui:field="addEntryButton" text="add entry"/>
 		<g:FlowPanel ui:field="contentPanel" styleName="{resource.css.block}"/>
 		<g:HorizontalPanel styleName="{resource.css.navigationPanel}">

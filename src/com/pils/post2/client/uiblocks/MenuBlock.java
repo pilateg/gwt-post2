@@ -171,20 +171,16 @@ public class MenuBlock extends Composite {
 	private void setUser(User user) {
 		if (user != null) {
 			userNameLabel.setText(user.getName());
-			loginPanel.setVisible(false);
-			logoutPanel.setVisible(true);
-
 			sectionsLabel.setText("my sections");
-			addSectionButton.setVisible(true);
 		} else {
 			nameText.setText("");
 			passText.setText("");
-			loginPanel.setVisible(true);
-			logoutPanel.setVisible(false);
-
 			sectionsLabel.setText("links");
-			addSectionButton.setVisible(false);
 		}
+		loginPanel.setVisible(user == null);
+		logoutPanel.setVisible(user != null);
+		addSectionButton.setVisible(user != null);
+		mainBlock.addEntryButton.setVisible(user != null);
 		ConversationManager.fetchSections(new ConversationCallback<List<Section>>() {
 			@Override
 			public void onSuccess(List<Section> sections) {
