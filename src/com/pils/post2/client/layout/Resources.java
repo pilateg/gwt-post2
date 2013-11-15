@@ -18,5 +18,7 @@ public interface Resources extends ClientBundle {
 		String navigationPanel();
 
 		String rightButton();
+
+		String floatPanel();
 	}
 }
