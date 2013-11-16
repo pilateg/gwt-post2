@@ -22,11 +22,11 @@ import com.pils.post2.shared.dto.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuBlock extends Composite {
-	interface MenuBlockUiBinder extends UiBinder<FlowPanel, MenuBlock> {}
-	private static MenuBlockUiBinder uiBinder = GWT.create(MenuBlockUiBinder.class);
+public class WorkspaceBlock extends Composite {
+	interface WorkspaceBlockUiBinder extends UiBinder<DockLayoutPanel, WorkspaceBlock> {}
+	private static WorkspaceBlockUiBinder uiBinder = GWT.create(WorkspaceBlockUiBinder.class);
 
-	public static final MenuBlock INSTANCE = new MenuBlock(MainBlock.INSTANCE);
+	public static final WorkspaceBlock INSTANCE = new WorkspaceBlock();
 
 	@UiField protected FlowPanel loginPanel;
 	@UiField protected TextBox nameText;
@@ -43,19 +43,37 @@ public class MenuBlock extends Composite {
 	protected PopupBlock addSectionPopup = new PopupBlock();
 	@UiField protected Button addSectionButton;
 	@UiField protected FlowPanel sectionsPanel;
+	@UiField protected FlowPanel breadcrumbPanel;
+	protected PopupBlock addEntryPopup = new PopupBlock();
+	@UiField protected Button addEntryButton;
+	@UiField protected FlowPanel contentPanel;
+	@UiField protected HorizontalPanel navigationBlock;
+	@UiField protected Button firstButton;
+	@UiField protected Button previousButton;
+	@UiField protected Button nextButton;
+	@UiField protected Button lastButton;
+	@UiField protected FlowPanel navigationPanel;
 
-	protected MainBlock mainBlock;
+
 	protected Entity currentEntity;
 	protected String currentSearchQuery;
+	private int itemsNumber;
+	private int itemsOnPage = -1;
+	private int pagesNumber;
+	private int currentPage = -1;
 
-	private MenuBlock(MainBlock mainBlock) {
-		this.mainBlock = mainBlock;
+	private WorkspaceBlock() {
 		initAuthenticationCallbacks();
 		initSearchBlock();
 		initSectionsBlock();
+		initContentBlock();
 
 		initWidget(uiBinder.createAndBindUi(this));
 
+		navigationBlock.setCellWidth(firstButton, "30px");
+		navigationBlock.setCellWidth(previousButton, "30px");
+		navigationBlock.setCellWidth(nextButton, "30px");
+		navigationBlock.setCellWidth(lastButton, "30px");
 		nameText.getElement().setAttribute("placeholder", "name");
 		passText.getElement().setAttribute("placeholder", "pass");
 		searchSuggest.getElement().setAttribute("placeholder", "search");
@@ -73,7 +91,7 @@ public class MenuBlock extends Composite {
 			public void onSuccess(Boolean result) {
 				if (result) {
 					setUser(null);
-					mainBlock.breadcrumbPanel.clear();
+					breadcrumbPanel.clear();
 				}
 			}
 		});
@@ -168,6 +186,48 @@ public class MenuBlock extends Composite {
 		);
 	}
 
+	private void initContentBlock() {
+		final TextBox title = new TextBox();
+		addEntryPopup.addWidget(title);
+		final TextArea content = new TextArea();
+		addEntryPopup.addWidget(content);
+		addEntryPopup.setButtons("create entry", "cancel",
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent createEvent) {
+						if (content.getText() == null || content.getText().isEmpty())
+							return;
+						final Entry entry = new Entry();
+						entry.setTitle(title.getText());
+						entry.setContent(content.getText());
+						if (currentEntity instanceof Section)
+							entry.setSection((Section) currentEntity);
+						ConversationManager.addEntry(entry, new ConversationCallback<Boolean>() {
+							@Override
+							public void onSuccess(Boolean result) {
+								if (result) {
+									addEntryPopup.hide();
+									title.setText("");
+									content.setText("");
+									//update content panel
+									contentPanel.add(new EntryBlock(entry));
+								}
+							}
+						});
+					}
+				},
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent cancelEvent) {
+						addEntryPopup.hide();
+						title.setText("");
+						content.setText("");
+					}
+				}
+		);
+		setUp(-1, ConversationManager.getItemsOnPage());
+	}
+
 	private void setUser(User user) {
 		if (user != null) {
 			userNameLabel.setText(user.getName());
@@ -180,7 +240,7 @@ public class MenuBlock extends Composite {
 		loginPanel.setVisible(user == null);
 		logoutPanel.setVisible(user != null);
 		addSectionButton.setVisible(user != null);
-		mainBlock.addEntryButton.setVisible(user != null);
+		addEntryButton.setVisible(user != null);
 		ConversationManager.fetchSections(new ConversationCallback<List<Section>>() {
 			@Override
 			public void onSuccess(List<Section> sections) {
@@ -195,32 +255,139 @@ public class MenuBlock extends Composite {
 	public void onEntitySelected(Entity e) {
 		currentEntity = e;
 		currentSearchQuery = null;
-		mainBlock.setBreadcrumb(e);
+		setBreadcrumb(e);
 		switch (e.getType()) {
 			case Comment:
-				mainBlock.setEntry(e);
-				mainBlock.navigationPanel.setVisible(false);
+				setEntry(e);
+				navigationPanel.setVisible(false);
 				break;
 			case Entry:
 				ConversationManager.fetchEntry(e.getId(), new ConversationCallback<Entry>() {
 					@Override
 					public void onSuccess(Entry result) {
-						mainBlock.navigationPanel.setVisible(false);
-						mainBlock.setEntry(result);
+						navigationPanel.setVisible(false);
+						setEntry(result);
 					}
 				});
 				break;
 			case Section:
-				mainBlock.setCurrentPage(0);
+				setCurrentPage(0);
 				break;
 			case Tag:
-				mainBlock.setCurrentPage(0);
+				setCurrentPage(0);
 				break;
 			case User:
-				mainBlock.setEntry(e);
+				setEntry(e);
 				break;
 		}
 		//update navigation
+	}
+
+	protected void setUp(int itemsNumber, int itemsOnPage) {
+		if ((itemsNumber != this.itemsNumber && itemsNumber != -1) ||
+				(itemsOnPage != this.itemsOnPage && itemsOnPage != -1)) {
+			if (itemsNumber != -1)
+				this.itemsNumber = itemsNumber;
+			if (itemsOnPage != -1)
+				this.itemsOnPage = itemsOnPage;
+			pagesNumber = this.itemsNumber / this.itemsOnPage + (this.itemsNumber % this.itemsOnPage == 0 ? 0 : 1);
+			if (navigationPanel != null) {
+				navigationPanel.setVisible(pagesNumber != 0);
+				navigationPanel.clear();
+			}
+			for (int i = 0; i < pagesNumber; ++i) {
+				final Button button = new Button(String.valueOf(i + 1));
+				button.getElement().getStyle().setProperty("display", "table-cell");
+				final int finalI = i;
+				button.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						setCurrentPage(finalI);
+					}
+				});
+				navigationPanel.add(button);
+			}
+		}
+	}
+
+	protected void setCurrentPage(int page) {
+		if (currentPage != page) {
+			if (currentPage != -1)
+				((Button) navigationPanel.getWidget(currentPage)).setEnabled(true);
+			try {
+				((Button) navigationPanel.getWidget(page)).setEnabled(false);
+			} catch (IndexOutOfBoundsException ignored) {}
+			currentPage = page;
+			firstButton.setEnabled(currentPage != 0);
+			previousButton.setEnabled(currentPage != 0);
+			nextButton.setEnabled(currentPage != pagesNumber - 1);
+			lastButton.setEnabled(currentPage != pagesNumber - 1);
+			if (currentPage == -1)
+				contentPanel.clear();
+			else {
+				if (currentEntity != null)
+					ConversationManager.fetchEntities(currentEntity, currentPage * itemsOnPage, itemsOnPage,
+							new ConversationCallback<EntitiesList>() {
+								@Override
+								public void onSuccess(EntitiesList result) {
+									setEntries(result.entities);
+									setUp(result.number, ConversationManager.getItemsOnPage());
+								}
+							});
+				else if (currentSearchQuery != null)
+					ConversationManager.search(currentSearchQuery, 0, ConversationManager.getItemsOnPage(),
+							new ConversationCallback<EntitiesList>() {
+								@Override
+								public void onSuccess(EntitiesList result) {
+									breadcrumbPanel.clear();
+									setEntries(result.entities);
+									setUp(result.number, ConversationManager.getItemsOnPage());
+								}
+							});
+			}
+		}
+	}
+
+	protected void setBreadcrumb(Entity entity) {
+		breadcrumbPanel.clear();
+		try {
+			switch (entity.getType()) {
+				case Comment:
+					Comment comment = (Comment) entity;
+					breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry().getSection().getOwner()));
+					breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry().getSection()));
+					breadcrumbPanel.add(new EntityLinkBlock(comment.getEntry()));
+					break;
+				case Entry:
+					Entry entry = (Entry) entity;
+					breadcrumbPanel.add(new EntityLinkBlock(entry.getSection().getOwner()));
+					breadcrumbPanel.add(new EntityLinkBlock(entry.getSection()));
+					breadcrumbPanel.add(new EntityLinkBlock(entry));
+					break;
+				case Section:
+					Section section = (Section) entity;
+					breadcrumbPanel.add(new EntityLinkBlock(section.getOwner()));
+					breadcrumbPanel.add(new EntityLinkBlock(section));
+					break;
+				case Tag:
+				case User:
+					breadcrumbPanel.add(new EntityLinkBlock(entity));
+					break;
+			}
+		} catch (Exception ignored) {}
+	}
+
+	protected void setEntries(List<? extends Entity> entities) {
+		contentPanel.clear();
+		if (entities != null)
+			for (Entity entity : entities)
+				contentPanel.add(new EntryBlock(entity));
+	}
+
+	protected void setEntry(Entity entity) {
+		contentPanel.clear();
+		if (entity != null)
+			contentPanel.add(new EntryDetailedBlock(entity));
 	}
 
 	@UiHandler(value={"nameText", "passText"})
@@ -248,7 +415,7 @@ public class MenuBlock extends Composite {
 		if (e.getCharCode() == KeyCodes.KEY_ENTER) {
 			currentSearchQuery = suggestText.getText();
 			currentEntity = null;
-			mainBlock.setCurrentPage(0);
+			setCurrentPage(0);
 		}
 	}
 
@@ -256,13 +423,39 @@ public class MenuBlock extends Composite {
 	void searchClick(ClickEvent e) {
 		currentSearchQuery = suggestText.getText();
 		currentEntity = null;
-		mainBlock.setCurrentPage(0);
+		setCurrentPage(0);
 	}
 
 	@UiHandler("addSectionButton")
 	void addSectionClick(ClickEvent e) {
 		if (ConversationManager.getCurrentUser() != null)
 			addSectionPopup.center();
+	}
+
+	@UiHandler("firstButton")
+	void firstClick(ClickEvent e) {
+		setCurrentPage(0);
+	}
+
+	@UiHandler("previousButton")
+	void previousClick(ClickEvent e) {
+		setCurrentPage(currentPage - 1);
+	}
+
+	@UiHandler("nextButton")
+	void nextClick(ClickEvent e) {
+		setCurrentPage(currentPage + 1);
+	}
+
+	@UiHandler("lastButton")
+	void lastClick(ClickEvent e) {
+		setCurrentPage(pagesNumber - 1);
+	}
+
+	@UiHandler("addEntryButton")
+	void addEntryClick(ClickEvent e) {
+		if (ConversationManager.getCurrentUser() != null)
+			addEntryPopup.center();
 	}
 
 	private static class EntitySuggestion extends MultiWordSuggestOracle.MultiWordSuggestion {

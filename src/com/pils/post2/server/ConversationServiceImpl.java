@@ -121,7 +121,7 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 			entry.setComments(comments);
 			entries.add(entry);
 		}
-		return new EntitiesList(entries, entries.size());
+		return new EntitiesList(entries, itemsNumber);
 	}
 
 	@Override

@@ -1,0 +1,58 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:w='urn:import:com.pils.post2.client.layout.widgets'>
+	<ui:with field="resource" type="com.pils.post2.client.layout.Resources"/>
+	<ui:style>
+		.panel > * {
+			margin: 2px;
+		}
+
+		.addSectionButton {
+			float: right;
+		}
+	</ui:style>
+	<g:DockLayoutPanel>
+		<g:east size="200">
+			<g:FlowPanel>
+				<g:FlowPanel styleName="{resource.css.block}">
+					<g:FlowPanel ui:field="loginPanel" styleName="{style.panel}">
+						<g:TextBox ui:field="nameText"/>
+						<g:TextBox ui:field="passText"/>
+						<w:Button ui:field="loginButton" text="log in"/>
+						<w:Button ui:field="registerButton" text="register"/>
+					</g:FlowPanel>
+					<g:FlowPanel ui:field="logoutPanel" visible="false">
+						<g:Label ui:field="userNameLabel"/>
+						<w:Button ui:field="logoutButton" text="log out"/>
+					</g:FlowPanel>
+				</g:FlowPanel>
+				<g:FlowPanel styleName="{resource.css.block}">
+					<g:SuggestBox ui:field="searchSuggest"/>
+					<w:Button ui:field="searchButton" text="search"/>
+				</g:FlowPanel>
+				<g:FlowPanel>
+					<w:Button ui:field="addSectionButton" visible="false" text="add section"
+					          addStyleNames="{style.addSectionButton}"/>
+					<g:Label ui:field="sectionsLabel"/>
+					<g:FlowPanel ui:field="sectionsPanel"/>
+				</g:FlowPanel>
+			</g:FlowPanel>
+		</g:east>
+		<g:center>
+			<g:FlowPanel>
+				<g:FlowPanel ui:field="breadcrumbPanel" height="50px" styleName="{resource.css.floatPanel}"/>
+				<w:Button ui:field="addEntryButton" text="add entry"/>
+				<g:FlowPanel ui:field="contentPanel" styleName="{resource.css.block}"/>
+				<g:HorizontalPanel ui:field="navigationBlock" styleName="{resource.css.navigationPanel}">
+					<w:Button ui:field="firstButton" text="&lt;&lt;" addStyleNames="{resource.css.leftButton}" width="30"/>
+					<w:Button ui:field="previousButton" text="&lt;" addStyleNames="{resource.css.leftButton}"/>
+					<g:ScrollPanel>
+						<g:FlowPanel ui:field="navigationPanel"/>
+					</g:ScrollPanel>
+					<w:Button ui:field="nextButton" text="&gt;" addStyleNames="{resource.css.rightButton}"/>
+					<w:Button ui:field="lastButton" text="&gt;&gt;" addStyleNames="{resource.css.rightButton}"/>
+				</g:HorizontalPanel>
+			</g:FlowPanel>
+		</g:center>
+	</g:DockLayoutPanel>
+</ui:UiBinder>
