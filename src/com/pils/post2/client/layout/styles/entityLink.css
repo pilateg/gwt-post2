@@ -1,12 +1,27 @@
-@def borderColor #445;
+@def linkBackColor #446;
+@def linkHoverColor #669;
+@def linkActiveColor #bde;
 
 .entityLink {
-	background: borderColor;
+	background: linkBackColor;
 	border-radius: 5px;
-	border: borderColor solid 1px;
+	color: #fff;
 	padding: 4px;
+	margin: 1px;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.entityLink:hover {
+	background: linkHoverColor;
+}
+
+.entityLink:active {
+	background: linkActiveColor;
+	color: #000;
 }
 
 .entityLink, .entityLink > * {
 	height: 20px;
+	line-height: 15px;
 }

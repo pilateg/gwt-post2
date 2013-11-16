@@ -15,10 +15,12 @@ public interface Resources extends ClientBundle {
 
 		String leftButton();
 
-		String navigationPanel();
+		String navigationBlock();
 
 		String rightButton();
 
-		String floatPanel();
+		String sectionsPanel();
+
+		String navigationPanel();
 	}
 }

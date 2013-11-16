@@ -10,6 +10,10 @@
 		.addSectionButton {
 			float: right;
 		}
+
+		.simpleBlock {
+			margin: 4px;
+		}
 	</ui:style>
 	<g:DockLayoutPanel>
 		<g:east size="200">
@@ -30,20 +34,20 @@
 					<g:SuggestBox ui:field="searchSuggest"/>
 					<w:Button ui:field="searchButton" text="search"/>
 				</g:FlowPanel>
-				<g:FlowPanel>
+				<g:FlowPanel styleName="{style.simpleBlock}">
 					<w:Button ui:field="addSectionButton" visible="false" text="add section"
 					          addStyleNames="{style.addSectionButton}"/>
 					<g:Label ui:field="sectionsLabel"/>
-					<g:FlowPanel ui:field="sectionsPanel"/>
+					<g:FlowPanel ui:field="sectionsPanel" styleName="{resource.css.sectionsPanel}"/>
 				</g:FlowPanel>
 			</g:FlowPanel>
 		</g:east>
 		<g:center>
 			<g:FlowPanel>
-				<g:FlowPanel ui:field="breadcrumbPanel" height="50px" styleName="{resource.css.floatPanel}"/>
+				<g:FlowPanel ui:field="breadcrumbPanel" height="36px" styleName="{resource.css.navigationPanel}"/>
 				<w:Button ui:field="addEntryButton" text="add entry"/>
-				<g:FlowPanel ui:field="contentPanel" styleName="{resource.css.block}"/>
-				<g:HorizontalPanel ui:field="navigationBlock" styleName="{resource.css.navigationPanel}">
+				<g:FlowPanel ui:field="contentPanel" styleName="{style.simpleBlock}"/>
+				<g:HorizontalPanel ui:field="navigationBlock" styleName="{resource.css.navigationBlock}">
 					<w:Button ui:field="firstButton" text="&lt;&lt;" addStyleNames="{resource.css.leftButton}" width="30"/>
 					<w:Button ui:field="previousButton" text="&lt;" addStyleNames="{resource.css.leftButton}"/>
 					<g:ScrollPanel>

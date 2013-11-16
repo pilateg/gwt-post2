@@ -57,7 +57,7 @@ public class WorkspaceBlock extends Composite {
 
 	protected Entity currentEntity;
 	protected String currentSearchQuery;
-	private int itemsNumber;
+	private int itemsNumber = -1;
 	private int itemsOnPage = -1;
 	private int pagesNumber;
 	private int currentPage = -1;
@@ -77,6 +77,7 @@ public class WorkspaceBlock extends Composite {
 		nameText.getElement().setAttribute("placeholder", "name");
 		passText.getElement().setAttribute("placeholder", "pass");
 		searchSuggest.getElement().setAttribute("placeholder", "search");
+		setUp(0, ConversationManager.getItemsOnPage());
 	}
 
 	private void initAuthenticationCallbacks() {
@@ -117,7 +118,7 @@ public class WorkspaceBlock extends Composite {
 		searchSuggest.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 			@Override
 			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
-				onEntitySelected(((EntitySuggestion) event.getSelectedItem()).entity);
+				selectEntity(((EntitySuggestion) event.getSelectedItem()).entity);
 			}
 		});
 	}
@@ -225,7 +226,6 @@ public class WorkspaceBlock extends Composite {
 					}
 				}
 		);
-		setUp(-1, ConversationManager.getItemsOnPage());
 	}
 
 	private void setUser(User user) {
@@ -252,20 +252,20 @@ public class WorkspaceBlock extends Composite {
 		});
 	}
 
-	public void onEntitySelected(Entity e) {
+	public void selectEntity(Entity e) {
 		currentEntity = e;
 		currentSearchQuery = null;
 		setBreadcrumb(e);
 		switch (e.getType()) {
 			case Comment:
 				setEntry(e);
-				navigationPanel.setVisible(false);
+				navigationBlock.setVisible(false);
 				break;
 			case Entry:
 				ConversationManager.fetchEntry(e.getId(), new ConversationCallback<Entry>() {
 					@Override
 					public void onSuccess(Entry result) {
-						navigationPanel.setVisible(false);
+						navigationBlock.setVisible(false);
 						setEntry(result);
 					}
 				});
@@ -288,11 +288,11 @@ public class WorkspaceBlock extends Composite {
 				(itemsOnPage != this.itemsOnPage && itemsOnPage != -1)) {
 			if (itemsNumber != -1)
 				this.itemsNumber = itemsNumber;
-			if (itemsOnPage != -1)
+			if (itemsOnPage > 0)
 				this.itemsOnPage = itemsOnPage;
 			pagesNumber = this.itemsNumber / this.itemsOnPage + (this.itemsNumber % this.itemsOnPage == 0 ? 0 : 1);
 			if (navigationPanel != null) {
-				navigationPanel.setVisible(pagesNumber != 0);
+				navigationBlock.setVisible(pagesNumber > 0);
 				navigationPanel.clear();
 			}
 			for (int i = 0; i < pagesNumber; ++i) {
@@ -311,7 +311,6 @@ public class WorkspaceBlock extends Composite {
 	}
 
 	protected void setCurrentPage(int page) {
-		if (currentPage != page) {
 			if (currentPage != -1)
 				((Button) navigationPanel.getWidget(currentPage)).setEnabled(true);
 			try {
@@ -345,7 +344,6 @@ public class WorkspaceBlock extends Composite {
 								}
 							});
 			}
-		}
 	}
 
 	protected void setBreadcrumb(Entity entity) {
