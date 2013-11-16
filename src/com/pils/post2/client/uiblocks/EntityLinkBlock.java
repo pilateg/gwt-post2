@@ -4,13 +4,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.pils.post2.shared.dto.Entity;
-import com.pils.post2.client.layout.Resources;
 
 public class EntityLinkBlock extends EntityBlock {
 
 	public EntityLinkBlock(Entity e) {
 		super(e);
-		mainPanel.addStyleName(Resources.INSTANCE.css().block());
+		EntityLinkResources.INSTANCE.css().ensureInjected();
 		mainPanel.addStyleName(EntityLinkResources.INSTANCE.css().entityLink());
 	}
 

@@ -47,7 +47,7 @@ public class EntityBlock extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				History.newItem("");
-				MenuBlock.INSTANCE.onEntitySelected(e);
+				WorkspaceBlock.INSTANCE.selectEntity(e);
 			}
 		});
 		link.setText(entity.getTitle());
