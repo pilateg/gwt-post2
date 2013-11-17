@@ -21,8 +21,8 @@ textarea {
 	table-layout: fixed;
 }
 
-.navigationPanel > div {
-	margin: 4px;
+.breadcrumbPanel > div {
+	margin-left: 4px;
 }
 
 .sectionsPanel > div {

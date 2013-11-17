@@ -22,9 +22,9 @@ public class Post2 implements EntryPoint {
 				logger.log(Level.SEVERE, "!!:", unwrap(e));
 			}
 		});
-		ConversationManager.restoreSession();
 		Resources.INSTANCE.css().ensureInjected();
 		init();
+		ConversationManager.restoreSession();
 	}
 
 	public static void init() {

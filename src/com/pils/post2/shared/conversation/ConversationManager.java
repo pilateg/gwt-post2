@@ -111,12 +111,11 @@ public class ConversationManager {
 		SERVICE.lightSearch(sessionId, query, callback);
 	}
 
-	public static void search(String query, long from, long number, AsyncCallback<EntitiesList> callback) {
-		SERVICE.search(sessionId, query, from, number, callback);
-	}
-
-	public static void fetchEntities(Entity parent, int from, int number, AsyncCallback<EntitiesList> callback) {
-		SERVICE.fetchEntities(sessionId, parent, from, number, callback);
+	public static void fetchEntities(Entity parent, String query, int from, int number, AsyncCallback<EntitiesList> callback) {
+		if (query != null && !query.isEmpty())
+			SERVICE.search(sessionId, query, from, number, callback);
+		else if (parent != null)
+			SERVICE.fetchEntities(sessionId, parent, from, number, callback);
 	}
 
 	public static void fetchEntry(long entryId, AsyncCallback<Entry> callback) {

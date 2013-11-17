@@ -57,10 +57,10 @@ public class WorkspaceBlock extends Composite {
 
 	protected Entity currentEntity;
 	protected String currentSearchQuery;
+	private int currentPage = -1;
 	private int itemsNumber = -1;
 	private int itemsOnPage = -1;
 	private int pagesNumber;
-	private int currentPage = -1;
 
 	private WorkspaceBlock() {
 		initAuthenticationCallbacks();
@@ -77,7 +77,7 @@ public class WorkspaceBlock extends Composite {
 		nameText.getElement().setAttribute("placeholder", "name");
 		passText.getElement().setAttribute("placeholder", "pass");
 		searchSuggest.getElement().setAttribute("placeholder", "search");
-		setUp(0, ConversationManager.getItemsOnPage());
+		updateNavigation(0, ConversationManager.getItemsOnPage(), 0);
 	}
 
 	private void initAuthenticationCallbacks() {
@@ -92,7 +92,9 @@ public class WorkspaceBlock extends Composite {
 			public void onSuccess(Boolean result) {
 				if (result) {
 					setUser(null);
-					breadcrumbPanel.clear();
+					setBreadcrumb(null);
+					setEntry(null);
+					updateNavigation(0, -1, 0);
 				}
 			}
 		});
@@ -236,11 +238,11 @@ public class WorkspaceBlock extends Composite {
 			nameText.setText("");
 			passText.setText("");
 			sectionsLabel.setText("links");
+			addEntryButton.setVisible(false);
 		}
 		loginPanel.setVisible(user == null);
 		logoutPanel.setVisible(user != null);
 		addSectionButton.setVisible(user != null);
-		addEntryButton.setVisible(user != null);
 		ConversationManager.fetchSections(new ConversationCallback<List<Section>>() {
 			@Override
 			public void onSuccess(List<Section> sections) {
@@ -252,38 +254,53 @@ public class WorkspaceBlock extends Composite {
 		});
 	}
 
+	private void refreshContent() {
+		//show loading on content panel
+		final Entity entity = currentEntity;
+		final int page = currentPage;
+		final int pageSize = ConversationManager.getItemsOnPage();
+		ConversationManager.fetchEntities(currentEntity, currentSearchQuery,
+				currentPage * ConversationManager.getItemsOnPage(), ConversationManager.getItemsOnPage(),
+				new ConversationCallback<EntitiesList>() {
+					@Override
+					public void onSuccess(EntitiesList result) {
+						setBreadcrumb(entity);
+						setEntries(result.entities);
+						updateNavigation(result.number, pageSize, page);
+						//hide loading on content panel
+					}
+				});
+	}
+
 	public void selectEntity(Entity e) {
 		currentEntity = e;
 		currentSearchQuery = null;
-		setBreadcrumb(e);
 		switch (e.getType()) {
 			case Comment:
+			case User:
+				setBreadcrumb(e);
 				setEntry(e);
-				navigationBlock.setVisible(false);
+				updateNavigation(0, -1, 0);
 				break;
 			case Entry:
 				ConversationManager.fetchEntry(e.getId(), new ConversationCallback<Entry>() {
 					@Override
 					public void onSuccess(Entry result) {
-						navigationBlock.setVisible(false);
+						setBreadcrumb(result);
+						updateNavigation(0, -1, 0);
 						setEntry(result);
 					}
 				});
 				break;
 			case Section:
-				setCurrentPage(0);
-				break;
 			case Tag:
-				setCurrentPage(0);
-				break;
-			case User:
-				setEntry(e);
+				currentPage = 0;
+				refreshContent();
 				break;
 		}
-		//update navigation
 	}
 
-	protected void setUp(int itemsNumber, int itemsOnPage) {
+	protected void updateNavigation(int itemsNumber, int itemsOnPage, int page) {
 		if ((itemsNumber != this.itemsNumber && itemsNumber != -1) ||
 				(itemsOnPage != this.itemsOnPage && itemsOnPage != -1)) {
 			if (itemsNumber != -1)
@@ -291,10 +308,8 @@ public class WorkspaceBlock extends Composite {
 			if (itemsOnPage > 0)
 				this.itemsOnPage = itemsOnPage;
 			pagesNumber = this.itemsNumber / this.itemsOnPage + (this.itemsNumber % this.itemsOnPage == 0 ? 0 : 1);
-			if (navigationPanel != null) {
-				navigationBlock.setVisible(pagesNumber > 0);
-				navigationPanel.clear();
-			}
+			navigationBlock.setVisible(pagesNumber > 0);
+			navigationPanel.clear();
 			for (int i = 0; i < pagesNumber; ++i) {
 				final Button button = new Button(String.valueOf(i + 1));
 				button.getElement().getStyle().setProperty("display", "table-cell");
@@ -302,52 +317,27 @@ public class WorkspaceBlock extends Composite {
 				button.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						setCurrentPage(finalI);
+						currentPage = finalI;
+						refreshContent();
 					}
 				});
 				navigationPanel.add(button);
 			}
 		}
-	}
-
-	protected void setCurrentPage(int page) {
-			if (currentPage != -1)
-				((Button) navigationPanel.getWidget(currentPage)).setEnabled(true);
-			try {
-				((Button) navigationPanel.getWidget(page)).setEnabled(false);
-			} catch (IndexOutOfBoundsException ignored) {}
-			currentPage = page;
-			firstButton.setEnabled(currentPage != 0);
-			previousButton.setEnabled(currentPage != 0);
-			nextButton.setEnabled(currentPage != pagesNumber - 1);
-			lastButton.setEnabled(currentPage != pagesNumber - 1);
-			if (currentPage == -1)
-				contentPanel.clear();
-			else {
-				if (currentEntity != null)
-					ConversationManager.fetchEntities(currentEntity, currentPage * itemsOnPage, itemsOnPage,
-							new ConversationCallback<EntitiesList>() {
-								@Override
-								public void onSuccess(EntitiesList result) {
-									setEntries(result.entities);
-									setUp(result.number, ConversationManager.getItemsOnPage());
-								}
-							});
-				else if (currentSearchQuery != null)
-					ConversationManager.search(currentSearchQuery, 0, ConversationManager.getItemsOnPage(),
-							new ConversationCallback<EntitiesList>() {
-								@Override
-								public void onSuccess(EntitiesList result) {
-									breadcrumbPanel.clear();
-									setEntries(result.entities);
-									setUp(result.number, ConversationManager.getItemsOnPage());
-								}
-							});
-			}
+		try {
+			((Button) navigationPanel.getWidget(page)).setEnabled(false);
+		} catch (IndexOutOfBoundsException ignored) {
+		}
+		firstButton.setEnabled(page != 0);
+		previousButton.setEnabled(page != 0);
+		nextButton.setEnabled(page != pagesNumber - 1);
+		lastButton.setEnabled(page != pagesNumber - 1);
 	}
 
 	protected void setBreadcrumb(Entity entity) {
 		breadcrumbPanel.clear();
+		if (entity == null)
+			return;
 		try {
 			switch (entity.getType()) {
 				case Comment:
@@ -376,6 +366,7 @@ public class WorkspaceBlock extends Composite {
 	}
 
 	protected void setEntries(List<? extends Entity> entities) {
+		addEntryButton.setVisible(currentEntity != null && currentEntity.getType() == Entity.EntityType.Section);
 		contentPanel.clear();
 		if (entities != null)
 			for (Entity entity : entities)
@@ -383,6 +374,7 @@ public class WorkspaceBlock extends Composite {
 	}
 
 	protected void setEntry(Entity entity) {
+		addEntryButton.setVisible(false);
 		contentPanel.clear();
 		if (entity != null)
 			contentPanel.add(new EntryDetailedBlock(entity));
@@ -411,17 +403,19 @@ public class WorkspaceBlock extends Composite {
 	@UiHandler("searchSuggest")
 	void searchKeyPress(KeyPressEvent e) {
 		if (e.getCharCode() == KeyCodes.KEY_ENTER) {
-			currentSearchQuery = suggestText.getText();
 			currentEntity = null;
-			setCurrentPage(0);
+			currentSearchQuery = suggestText.getText();
+			currentPage = 0;
+			refreshContent();
 		}
 	}
 
 	@UiHandler("searchButton")
 	void searchClick(ClickEvent e) {
-		currentSearchQuery = suggestText.getText();
 		currentEntity = null;
-		setCurrentPage(0);
+		currentSearchQuery = suggestText.getText();
+		currentPage = 0;
+		refreshContent();
 	}
 
 	@UiHandler("addSectionButton")
@@ -432,22 +426,26 @@ public class WorkspaceBlock extends Composite {
 
 	@UiHandler("firstButton")
 	void firstClick(ClickEvent e) {
-		setCurrentPage(0);
+		currentPage = 0;
+		refreshContent();
 	}
 
 	@UiHandler("previousButton")
 	void previousClick(ClickEvent e) {
-		setCurrentPage(currentPage - 1);
+		--currentPage;
+		refreshContent();
 	}
 
 	@UiHandler("nextButton")
 	void nextClick(ClickEvent e) {
-		setCurrentPage(currentPage + 1);
+		++currentPage;
+		refreshContent();
 	}
 
 	@UiHandler("lastButton")
 	void lastClick(ClickEvent e) {
-		setCurrentPage(pagesNumber - 1);
+		currentPage = pagesNumber - 1;
+		refreshContent();
 	}
 
 	@UiHandler("addEntryButton")
