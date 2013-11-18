@@ -324,6 +324,8 @@ public class WorkspaceBlock extends Composite {
 				navigationPanel.add(button);
 			}
 		}
+		for (int i = 0; i < navigationPanel.getWidgetCount(); i++)
+			((Button) navigationPanel.getWidget(i)).setEnabled(true);
 		try {
 			((Button) navigationPanel.getWidget(page)).setEnabled(false);
 		} catch (IndexOutOfBoundsException ignored) {
