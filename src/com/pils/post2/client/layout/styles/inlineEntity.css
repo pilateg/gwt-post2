@@ -1,0 +1,12 @@
+.mainPanel {
+	position: absolute;
+	display: inline-block;
+	padding: 2px;
+	margin: 0;
+	font-size: 80%;
+	line-height: 0;
+}
+
+.mainPanel > div {
+	line-height: 80%;
+}
