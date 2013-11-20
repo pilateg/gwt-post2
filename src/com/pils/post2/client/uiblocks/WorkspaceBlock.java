@@ -1,6 +1,7 @@
 package com.pils.post2.client.uiblocks;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -111,7 +112,8 @@ public class WorkspaceBlock extends Composite {
 								List<Suggestion> suggestions = new ArrayList<Suggestion>();
 								if (result != null)
 									for (Entity entity : result)
-										suggestions.add(new EntitySuggestion(null, ClientUtils.trim(entity.getTitle(), 50)));
+										suggestions.add(new EntitySuggestion(entity, null,
+												ClientUtils.trim(entity.getTitle(), 50)));
 								callback.onSuggestionsReady(request, new Response(suggestions));
 							}
 						});
@@ -127,10 +129,9 @@ public class WorkspaceBlock extends Composite {
 
 	private void initSectionsBlock() {
 		final TextBox sectionTitle = new TextBox();
-		addSectionPopup.addWidget(sectionTitle);
-		final CheckBox checkBox = new CheckBox("open for all");
-		addSectionPopup.addWidget(checkBox);
-		final List<User> users = new ArrayList<User>();
+		addSectionPopup.addWidget(new Label("section title"), sectionTitle);
+		final CheckBox checkBox = new CheckBox();
+		addSectionPopup.addWidget(new Label("open for all"), checkBox);
 		final TextBox accessUsersTextBox = new TextBox();
 		final SuggestBox accessUsers = new SuggestBox(new SuggestOracle() {
 			@Override
@@ -139,19 +140,43 @@ public class WorkspaceBlock extends Composite {
 					@Override
 					public void onSuccess(List<User> result) {
 						List<Suggestion> suggestions = new ArrayList<Suggestion>();
-						for (User user : result)
-							suggestions.add(new MultiWordSuggestOracle.MultiWordSuggestion(user.getName() + ", ", user.getName()));
+						for (Entity entity : result)
+							suggestions.add(new EntitySuggestion(entity, null,
+									ClientUtils.trim(entity.getTitle(), 50)));
 						callback.onSuggestionsReady(request, new Response(suggestions));
 					}
 				});
 			}
 		}, accessUsersTextBox);
+		final List<User> users = new ArrayList<User>();
+		final Label usersLabel = new Label("users with access");
+		final FlowPanel accessPanel = new FlowPanel();
+		accessPanel.add(accessUsers);
+		accessUsers.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+			@Override
+			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
+				User user = (User) ((EntitySuggestion) event.getSelectedItem()).entity;
+				users.add(user);
+				final InlineEntityBlock inlineEntityBlock = new InlineEntityBlock(user);
+				inlineEntityBlock.addCancelClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						accessPanel.remove(inlineEntityBlock);
+					}
+				});
+				accessPanel.add(inlineEntityBlock);
+			}
+		});
+		accessUsers.getElement().getStyle().setWidth(100, Style.Unit.PCT);
+		addSectionPopup.addWidget(usersLabel, accessPanel);
+		usersLabel.setVisible(false);
 		accessUsers.setVisible(false);
-		addSectionPopup.addWidget(accessUsers);
+		checkBox.setValue(true);
 		checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				accessUsers.setVisible(event.getValue());
+				usersLabel.setVisible(!event.getValue());
+				accessUsers.setVisible(!event.getValue());
 			}
 		});
 		addSectionPopup.setButtons("create section", "cancel",
@@ -172,6 +197,9 @@ public class WorkspaceBlock extends Composite {
 								if (result) {
 									addSectionPopup.hide();
 									sectionTitle.setText("");
+									accessUsers.setText("");
+									accessPanel.clear();
+									accessPanel.add(accessUsers);
 									//add section to db and update
 									sectionsPanel.add(new EntityLinkBlock(section));
 								}
@@ -184,6 +212,9 @@ public class WorkspaceBlock extends Composite {
 					public void onClick(ClickEvent cancelEvent) {
 						addSectionPopup.hide();
 						sectionTitle.setText("");
+						accessUsers.setText("");
+						accessPanel.clear();
+						accessPanel.add(accessUsers);
 					}
 				}
 		);
@@ -191,9 +222,9 @@ public class WorkspaceBlock extends Composite {
 
 	private void initContentBlock() {
 		final TextBox title = new TextBox();
-		addEntryPopup.addWidget(title);
+		addEntryPopup.addWidget(new Label("entry title"), title);
 		final TextArea content = new TextArea();
-		addEntryPopup.addWidget(content);
+		addEntryPopup.addWidget(new Label("entry content"), content);
 		addEntryPopup.setButtons("create entry", "cancel",
 				new ClickHandler() {
 					@Override
@@ -324,6 +355,8 @@ public class WorkspaceBlock extends Composite {
 				navigationPanel.add(button);
 			}
 		}
+		for (int i = 0; i < navigationPanel.getWidgetCount(); i++)
+			((Button) navigationPanel.getWidget(i)).setEnabled(true);
 		try {
 			((Button) navigationPanel.getWidget(page)).setEnabled(false);
 		} catch (IndexOutOfBoundsException ignored) {
@@ -456,12 +489,13 @@ public class WorkspaceBlock extends Composite {
 
 	private static class EntitySuggestion extends MultiWordSuggestOracle.MultiWordSuggestion {
 
-		Entity entity;
+		private Entity entity;
 
 		private EntitySuggestion() {}
 
-		private EntitySuggestion(String replacementString, String displayString) {
+		private EntitySuggestion(Entity entity, String replacementString, String displayString) {
 			super(replacementString, displayString);
+			this.entity = entity;
 		}
 	}
 }

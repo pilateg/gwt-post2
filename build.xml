@@ -10,10 +10,13 @@
 		<fileset dir="${out.dir}/WEB-INF/lib" includes="**/*.jar"/>
 	</path>
 
+	<target name="clean" description="Cleans this project">
+		<delete dir="${out.dir}" failonerror="false"/>
+	</target>
+
 	<target name="libs" description="Copy libs to WEB-INF/lib">
 		<mkdir dir="${out.dir}/WEB-INF/lib"/>
 		<copy todir="${out.dir}/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar"/>
-		<!-- Add any additional server libs that need to be copied -->
 	</target>
 
 	<target name="resources" description="Copy resources to WEB-INF/">
@@ -21,7 +24,7 @@
 		<copy todir="${out.dir}" file="web/Post2.html"/>
 	</target>
 
-	<target name="javac" depends="libs, resources, clean" description="Compile java source to bytecode">
+	<target name="javac" depends="clean, libs, resources" description="Compile java source to bytecode">
 		<mkdir dir="${out.dir}/WEB-INF/classes"/>
 		<javac srcdir="src" includes="**" encoding="utf-8"
 		       destdir="${out.dir}/WEB-INF/classes"
@@ -43,12 +46,9 @@
 				<pathelement location="${gwt.sdk}/validation-api-1.0.0.GA-sources.jar"/>
 			</classpath>
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
-			<jvmarg value="-Xmx512M"/>
-			<arg line="-war"/>
-			<arg value="${out.dir}"/>
+			<jvmarg line="-Xmx512M -Dgwt.persistentunitcachedir=false"/>
+			<arg line="-war ${out.dir} ${gwt.xml} ${gwt.args}"/>
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-			<arg line="${gwt.args}"/>
-			<arg value="${gwt.xml}"/>
 		</java>
 	</target>
 
@@ -78,9 +78,4 @@
 	<target name="war" depends="build" description="Create a war file">
 		<zip destfile="${deploy.dir}/gwt.war" basedir="${out.dir}"/>
 	</target>
-
-	<target name="clean" description="Cleans this project">
-		<delete dir="${out.dir}/WEB-INF/classes" failonerror="false"/>
-	</target>
-
 </project>

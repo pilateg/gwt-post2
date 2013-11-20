@@ -9,14 +9,14 @@ import com.google.gwt.user.client.ui.*;
 import com.pils.post2.shared.dto.Entity;
 import com.pils.post2.client.layout.widgets.Button;
 
-public class EntityBlock extends Composite {
+public abstract class EntityBlock extends Composite {
 
 	protected Entity entity;
 	protected Anchor link = GWT.create(Anchor.class);
 	protected FlowPanel mainPanel;
 	protected HTML description;
 
-	public EntityBlock(final Entity e) {
+	protected EntityBlock(final Entity e) {
 		mainPanel = new FlowPanel();
 		final Button options = new Button();
 		options.setText("o");
