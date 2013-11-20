@@ -127,9 +127,9 @@ public class WorkspaceBlock extends Composite {
 
 	private void initSectionsBlock() {
 		final TextBox sectionTitle = new TextBox();
-		addSectionPopup.addWidget(sectionTitle);
-		final CheckBox checkBox = new CheckBox("open for all");
-		addSectionPopup.addWidget(checkBox);
+		addSectionPopup.addWidget(new Label("section title"), sectionTitle);
+		final CheckBox checkBox = new CheckBox();
+		addSectionPopup.addWidget(new Label("open for all"), checkBox);
 		final List<User> users = new ArrayList<User>();
 		final TextBox accessUsersTextBox = new TextBox();
 		final SuggestBox accessUsers = new SuggestBox(new SuggestOracle() {
@@ -147,11 +147,12 @@ public class WorkspaceBlock extends Composite {
 			}
 		}, accessUsersTextBox);
 		accessUsers.setVisible(false);
-		addSectionPopup.addWidget(accessUsers);
+		addSectionPopup.addWidget(new Label("users with access"), accessUsers);
+		checkBox.setValue(true);
 		checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				accessUsers.setVisible(event.getValue());
+				accessUsers.setVisible(!event.getValue());
 			}
 		});
 		addSectionPopup.setButtons("create section", "cancel",
@@ -172,6 +173,7 @@ public class WorkspaceBlock extends Composite {
 								if (result) {
 									addSectionPopup.hide();
 									sectionTitle.setText("");
+									accessUsers.setText("");
 									//add section to db and update
 									sectionsPanel.add(new EntityLinkBlock(section));
 								}
@@ -184,6 +186,7 @@ public class WorkspaceBlock extends Composite {
 					public void onClick(ClickEvent cancelEvent) {
 						addSectionPopup.hide();
 						sectionTitle.setText("");
+						accessUsers.setText("");
 					}
 				}
 		);
@@ -191,9 +194,9 @@ public class WorkspaceBlock extends Composite {
 
 	private void initContentBlock() {
 		final TextBox title = new TextBox();
-		addEntryPopup.addWidget(title);
+		addEntryPopup.addWidget(new Label("entry title"), title);
 		final TextArea content = new TextArea();
-		addEntryPopup.addWidget(content);
+		addEntryPopup.addWidget(new Label("entry content"), content);
 		addEntryPopup.setButtons("create entry", "cancel",
 				new ClickHandler() {
 					@Override

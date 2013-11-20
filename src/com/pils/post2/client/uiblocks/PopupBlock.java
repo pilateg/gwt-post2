@@ -12,7 +12,7 @@ import com.pils.post2.client.layout.widgets.Button;
 public class PopupBlock extends Composite {
 
 	private PopupPanel popup;
-	private FlowPanel panel;
+	private FlexTable table;
 	private Button addButton;
 	private Button cancelButton;
 
@@ -24,9 +24,10 @@ public class PopupBlock extends Composite {
 		VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.getElement().getStyle().setWidth(100, Style.Unit.PCT);
 		popup.setWidget(verticalPanel);
-		panel = new FlowPanel();
+		table = new FlexTable();
+		table.getElement().getStyle().setWidth(100, Style.Unit.PCT);
 		FlowPanel buttonPanel = new FlowPanel();
-		verticalPanel.add(panel);
+		verticalPanel.add(table);
 		verticalPanel.add(buttonPanel);
 		addButton = new Button();
 		cancelButton = new Button();
@@ -35,7 +36,15 @@ public class PopupBlock extends Composite {
 	}
 
 	public void addWidget(Widget widget) {
-		panel.add(widget);
+		table.setWidget(table.getRowCount(), 0, widget);
+		widget.getElement().getStyle().setWidth(100, Style.Unit.PCT);
+		table.getFlexCellFormatter().setColSpan(table.getRowCount() - 1, 0, 2);
+	}
+
+	public void addWidget(Widget label, Widget widget) {
+		table.setWidget(table.getRowCount(), 0, label);
+		table.setWidget(table.getRowCount() - 1, 1, widget);
+		widget.getElement().getStyle().setWidth(100, Style.Unit.PCT);
 	}
 
 	public void setButtons(String addTitle, String cancelTitle, ClickHandler addHandler, ClickHandler cancelHandler) {
