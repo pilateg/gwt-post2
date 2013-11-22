@@ -46,7 +46,7 @@
 				<pathelement location="${gwt.sdk}/validation-api-1.0.0.GA-sources.jar"/>
 			</classpath>
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
-			<jvmarg line="-Xmx512M -Dgwt.persistentunitcachedir=false"/>
+			<jvmarg line="-Xmx512M -Dgwt.persistentunitcache=false"/>
 			<arg line="-war ${out.dir} ${gwt.xml} ${gwt.args}"/>
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
 		</java>

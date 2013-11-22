@@ -22,6 +22,8 @@ public interface ConversationServiceAsync {
 
 	void fetchUsers(long sessionId, String query, AsyncCallback<List<User>> async);
 
+	void fetchTags(long sessionId, String query, AsyncCallback<List<Tag>> async);
+
 	void lightSearch(long sessionId, String query, AsyncCallback<List<? extends Entity>> async);
 
 	void search(long sessionId, String query, long from, long number, AsyncCallback<EntitiesList> async);
