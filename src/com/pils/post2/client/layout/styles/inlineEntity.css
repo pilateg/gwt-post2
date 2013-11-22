@@ -1,8 +1,8 @@
 .mainPanel {
-	position: absolute;
-	display: inline-block;
+	position: relative;
+	float: left;
 	padding: 2px;
-	margin: 0;
+	margin: 0 1px;
 	font-size: 80%;
 	line-height: 0;
 }

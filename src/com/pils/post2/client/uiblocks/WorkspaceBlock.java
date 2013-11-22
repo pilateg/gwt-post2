@@ -2,10 +2,7 @@ package com.pils.post2.client.uiblocks;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -152,19 +149,29 @@ public class WorkspaceBlock extends Composite {
 		final Label usersLabel = new Label("users with access");
 		final FlowPanel accessPanel = new FlowPanel();
 		accessPanel.add(accessUsers);
+		accessUsers.addKeyDownHandler(new KeyDownHandler() {
+			@Override
+			public void onKeyDown(KeyDownEvent e) {
+				if (e.getNativeKeyCode() == KeyCodes.KEY_ESCAPE)
+					((SuggestBox.DefaultSuggestionDisplay) accessUsers.getSuggestionDisplay()).hideSuggestions();
+			}
+		});
 		accessUsers.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 			@Override
 			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
-				User user = (User) ((EntitySuggestion) event.getSelectedItem()).entity;
+				final User user = (User) ((EntitySuggestion) event.getSelectedItem()).entity;
 				users.add(user);
 				final InlineEntityBlock inlineEntityBlock = new InlineEntityBlock(user);
 				inlineEntityBlock.addCancelClickHandler(new ClickHandler() {
 					@Override
-					public void onClick(ClickEvent event) {
+					public void onClick(ClickEvent e) {
 						accessPanel.remove(inlineEntityBlock);
+						users.remove(user);
+						accessUsers.setFocus(true);
 					}
 				});
 				accessPanel.add(inlineEntityBlock);
+				accessUsers.setFocus(true);
 			}
 		});
 		accessUsers.getElement().getStyle().setWidth(100, Style.Unit.PCT);
@@ -200,7 +207,6 @@ public class WorkspaceBlock extends Composite {
 									accessUsers.setText("");
 									accessPanel.clear();
 									accessPanel.add(accessUsers);
-									//add section to db and update
 									sectionsPanel.add(new EntityLinkBlock(section));
 								}
 							}

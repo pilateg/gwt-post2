@@ -44,6 +44,7 @@ public class PopupBlock extends Composite {
 	public void addWidget(Widget label, Widget widget) {
 		table.setWidget(table.getRowCount(), 0, label);
 		table.setWidget(table.getRowCount() - 1, 1, widget);
+		table.getFlexCellFormatter().setWidth(table.getRowCount() - 1, 0, "30%");
 		widget.getElement().getStyle().setWidth(100, Style.Unit.PCT);
 	}
 
