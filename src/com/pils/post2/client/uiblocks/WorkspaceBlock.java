@@ -129,11 +129,11 @@ public class WorkspaceBlock extends Composite {
 		addSectionPopup.addWidget(new Label("section title"), sectionTitle);
 		final CheckBox checkBox = new CheckBox();
 		addSectionPopup.addWidget(new Label("open for all"), checkBox);
-		final TextBox accessUsersTextBox = new TextBox();
-		final SuggestBox accessUsers = new SuggestBox(new SuggestOracle() {
+		final TextBox usersTextBox = new TextBox();
+		final SuggestBox usersSuggest = new SuggestBox(new SuggestOracle() {
 			@Override
 			public void requestSuggestions(final Request request, final Callback callback) {
-				ConversationManager.fetchUsers(accessUsersTextBox.getText(), new ConversationCallback<List<User>>() {
+				ConversationManager.fetchUsers(usersTextBox.getText(), new ConversationCallback<List<User>>() {
 					@Override
 					public void onSuccess(List<User> result) {
 						List<Suggestion> suggestions = new ArrayList<Suggestion>();
@@ -144,19 +144,19 @@ public class WorkspaceBlock extends Composite {
 					}
 				});
 			}
-		}, accessUsersTextBox);
+		}, usersTextBox);
 		final List<User> users = new ArrayList<User>();
 		final Label usersLabel = new Label("users with access");
-		final FlowPanel accessPanel = new FlowPanel();
-		accessPanel.add(accessUsers);
-		accessUsers.addKeyDownHandler(new KeyDownHandler() {
+		final FlowPanel usersPanel = new FlowPanel();
+		usersPanel.add(usersSuggest);
+		usersSuggest.addKeyDownHandler(new KeyDownHandler() {
 			@Override
 			public void onKeyDown(KeyDownEvent e) {
 				if (e.getNativeKeyCode() == KeyCodes.KEY_ESCAPE)
-					((SuggestBox.DefaultSuggestionDisplay) accessUsers.getSuggestionDisplay()).hideSuggestions();
+					((SuggestBox.DefaultSuggestionDisplay) usersSuggest.getSuggestionDisplay()).hideSuggestions();
 			}
 		});
-		accessUsers.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+		usersSuggest.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 			@Override
 			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
 				final User user = (User) ((EntitySuggestion) event.getSelectedItem()).entity;
@@ -165,25 +165,25 @@ public class WorkspaceBlock extends Composite {
 				inlineEntityBlock.addCancelClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent e) {
-						accessPanel.remove(inlineEntityBlock);
+						usersPanel.remove(inlineEntityBlock);
 						users.remove(user);
-						accessUsers.setFocus(true);
+						usersSuggest.setFocus(true);
 					}
 				});
-				accessPanel.add(inlineEntityBlock);
-				accessUsers.setFocus(true);
+				usersPanel.add(inlineEntityBlock);
+				usersSuggest.setFocus(true);
 			}
 		});
-		accessUsers.getElement().getStyle().setWidth(100, Style.Unit.PCT);
-		addSectionPopup.addWidget(usersLabel, accessPanel);
+		usersSuggest.getElement().getStyle().setWidth(100, Style.Unit.PCT);
+		addSectionPopup.addWidget(usersLabel, usersPanel);
 		usersLabel.setVisible(false);
-		accessUsers.setVisible(false);
+		usersSuggest.setVisible(false);
 		checkBox.setValue(true);
 		checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				usersLabel.setVisible(!event.getValue());
-				accessUsers.setVisible(!event.getValue());
+				usersSuggest.setVisible(!event.getValue());
 			}
 		});
 		addSectionPopup.setButtons("create section", "cancel",
@@ -204,9 +204,9 @@ public class WorkspaceBlock extends Composite {
 								if (result) {
 									addSectionPopup.hide();
 									sectionTitle.setText("");
-									accessUsers.setText("");
-									accessPanel.clear();
-									accessPanel.add(accessUsers);
+									usersSuggest.setText("");
+									usersPanel.clear();
+									usersPanel.add(usersSuggest);
 									sectionsPanel.add(new EntityLinkBlock(section));
 								}
 							}
@@ -218,9 +218,9 @@ public class WorkspaceBlock extends Composite {
 					public void onClick(ClickEvent cancelEvent) {
 						addSectionPopup.hide();
 						sectionTitle.setText("");
-						accessUsers.setText("");
-						accessPanel.clear();
-						accessPanel.add(accessUsers);
+						usersSuggest.setText("");
+						usersPanel.clear();
+						usersPanel.add(usersSuggest);
 					}
 				}
 		);
@@ -231,6 +231,52 @@ public class WorkspaceBlock extends Composite {
 		addEntryPopup.addWidget(new Label("entry title"), title);
 		final TextArea content = new TextArea();
 		addEntryPopup.addWidget(new Label("entry content"), content);
+		final TextBox tagsTextBox = new TextBox();
+		final SuggestBox tagsSuggest = new SuggestBox(new SuggestOracle() {
+			@Override
+			public void requestSuggestions(final Request request, final Callback callback) {
+				ConversationManager.fetchTags(tagsTextBox.getText(), new ConversationCallback<List<Tag>>() {
+					@Override
+					public void onSuccess(List<Tag> result) {
+						List<Suggestion> suggestions = new ArrayList<Suggestion>();
+						for (Entity entity : result)
+							suggestions.add(new EntitySuggestion(entity, null,
+									ClientUtils.trim(entity.getTitle(), 50)));
+						callback.onSuggestionsReady(request, new Response(suggestions));
+					}
+				});
+			}
+		}, tagsTextBox);
+		final List<Tag> tags = new ArrayList<Tag>();
+		final FlowPanel tagsPanel = new FlowPanel();
+		tagsPanel.add(tagsSuggest);
+		tagsSuggest.addKeyDownHandler(new KeyDownHandler() {
+			@Override
+			public void onKeyDown(KeyDownEvent e) {
+				if (e.getNativeKeyCode() == KeyCodes.KEY_ESCAPE)
+					((SuggestBox.DefaultSuggestionDisplay) tagsSuggest.getSuggestionDisplay()).hideSuggestions();
+			}
+		});
+		tagsSuggest.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+			@Override
+			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
+				final Tag tag = (Tag) ((EntitySuggestion) event.getSelectedItem()).entity;
+				tags.add(tag);
+				final InlineEntityBlock inlineEntityBlock = new InlineEntityBlock(tag);
+				inlineEntityBlock.addCancelClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent e) {
+						tagsPanel.remove(inlineEntityBlock);
+						tags.remove(tag);
+						tagsSuggest.setFocus(true);
+					}
+				});
+				tagsPanel.add(inlineEntityBlock);
+				tagsSuggest.setFocus(true);
+			}
+		});
+		tagsSuggest.getElement().getStyle().setWidth(100, Style.Unit.PCT);
+		addEntryPopup.addWidget(new Label("tags"), tagsPanel);
 		addEntryPopup.setButtons("create entry", "cancel",
 				new ClickHandler() {
 					@Override
@@ -240,6 +286,7 @@ public class WorkspaceBlock extends Composite {
 						final Entry entry = new Entry();
 						entry.setTitle(title.getText());
 						entry.setContent(content.getText());
+						entry.setTags(tags);
 						if (currentEntity instanceof Section)
 							entry.setSection((Section) currentEntity);
 						ConversationManager.addEntry(entry, new ConversationCallback<Boolean>() {
@@ -249,7 +296,9 @@ public class WorkspaceBlock extends Composite {
 									addEntryPopup.hide();
 									title.setText("");
 									content.setText("");
-									//update content panel
+									tagsSuggest.setText("");
+									tagsPanel.clear();
+									tagsPanel.add(tagsSuggest);
 									contentPanel.add(new EntryBlock(entry));
 								}
 							}
@@ -262,6 +311,9 @@ public class WorkspaceBlock extends Composite {
 						addEntryPopup.hide();
 						title.setText("");
 						content.setText("");
+						tagsSuggest.setText("");
+						tagsPanel.clear();
+						tagsPanel.add(tagsSuggest);
 					}
 				}
 		);

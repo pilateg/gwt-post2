@@ -25,6 +25,8 @@ public interface ConversationService extends RemoteService {
 
 	List<User> fetchUsers(long sessionId, String query);
 
+	List<Tag> fetchTags(long sessionId, String query);
+
 	List<? extends Entity> lightSearch(long sessionId, String query);
 
 	EntitiesList search(long sessionId, String query, long from, long number);

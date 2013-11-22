@@ -107,6 +107,10 @@ public class ConversationManager {
 		SERVICE.fetchUsers(sessionId, query, callback);
 	}
 
+	public static void fetchTags(String query, AsyncCallback<List<Tag>> callback) {
+		SERVICE.fetchTags(sessionId, query, callback);
+	}
+
 	public static void lightSearch(String query, AsyncCallback<List<? extends Entity>> callback) {
 		SERVICE.lightSearch(sessionId, query, callback);
 	}
