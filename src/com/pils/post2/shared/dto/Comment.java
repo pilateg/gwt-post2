@@ -1,11 +1,22 @@
 package com.pils.post2.shared.dto;
 
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@javax.persistence.Entity
+@Table(name = "COMMENTS")
 public class Comment extends Entity {
+	@NotNull
+	@ManyToOne
 	private User author;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	private String content;
+	@ManyToOne
 	private Entry entry;
 
 	@Override

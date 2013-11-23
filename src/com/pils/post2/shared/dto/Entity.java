@@ -1,8 +1,12 @@
 package com.pils.post2.shared.dto;
 
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
+@MappedSuperclass
 public abstract class Entity implements Serializable {
+	@Id
 	protected long id;
 
 	public abstract EntityType getType();
