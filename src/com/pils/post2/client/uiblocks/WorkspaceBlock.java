@@ -30,6 +30,7 @@ public class WorkspaceBlock extends Composite {
 	@UiField protected TextBox nameText;
 	@UiField protected TextBox passText;
 	@UiField protected Button loginButton;
+	protected PopupBlock addUserPopup = new PopupBlock();
 	@UiField protected Button registerButton;
 	@UiField protected FlowPanel logoutPanel;
 	@UiField protected Label userNameLabel;
@@ -62,6 +63,7 @@ public class WorkspaceBlock extends Composite {
 
 	private WorkspaceBlock() {
 		initAuthenticationCallbacks();
+		initLoginBlock();
 		initSearchBlock();
 		initSectionsBlock();
 		initContentBlock();
@@ -98,6 +100,51 @@ public class WorkspaceBlock extends Composite {
 		});
 	}
 
+	private void initLoginBlock() {
+		final TextBox nameTextBox = new TextBox();
+		final TextBox passwordTextBox = new TextBox();
+		final TextBox password2TextBox = new TextBox();
+		addUserPopup.addWidget(new Label("user name"), nameTextBox);
+		addUserPopup.addWidget(new Label("password"), passwordTextBox);
+		addUserPopup.addWidget(new Label("password"), password2TextBox);
+		addUserPopup.setButtons("create user", "cancel",
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent createEvent) {
+						if (ClientUtils.isEmpty(nameTextBox.getText()) ||
+								ClientUtils.isEmpty(passwordTextBox.getText()) ||
+								ClientUtils.isEmpty(password2TextBox.getText()) ||
+								!passwordTextBox.getText().equals(password2TextBox.getText()))
+							return;
+						final User user = new User();
+						user.setName(nameTextBox.getText());
+						user.setPassword(passwordTextBox.getText());
+						ConversationManager.addUser(user, new ConversationCallback<Boolean>() {
+							@Override
+							public void onSuccess(Boolean result) {
+								if (result) {
+									addUserPopup.hide();
+									ConversationManager.login(user.getName(), user.getPassword());
+									nameTextBox.setText("");
+									passwordTextBox.setText("");
+									password2TextBox.setText("");
+								}
+							}
+						});
+					}
+				},
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent cancelEvent) {
+						addUserPopup.hide();
+						nameTextBox.setText("");
+						passwordTextBox.setText("");
+						password2TextBox.setText("");
+					}
+				}
+		);
+	}
+
 	private void initSearchBlock() {
 		searchSuggest = new SuggestBox(new SuggestOracle() {
 			@Override
@@ -125,10 +172,10 @@ public class WorkspaceBlock extends Composite {
 	}
 
 	private void initSectionsBlock() {
-		final TextBox sectionTitle = new TextBox();
-		addSectionPopup.addWidget(new Label("section title"), sectionTitle);
-		final CheckBox checkBox = new CheckBox();
-		addSectionPopup.addWidget(new Label("open for all"), checkBox);
+		final TextBox sectionTitleTextBox = new TextBox();
+		addSectionPopup.addWidget(new Label("section title"), sectionTitleTextBox);
+		final CheckBox openForAllCheckBox = new CheckBox();
+		addSectionPopup.addWidget(new Label("open for all"), openForAllCheckBox);
 		final TextBox usersTextBox = new TextBox();
 		final SuggestBox usersSuggest = new SuggestBox(new SuggestOracle() {
 			@Override
@@ -178,8 +225,8 @@ public class WorkspaceBlock extends Composite {
 		addSectionPopup.addWidget(usersLabel, usersPanel);
 		usersLabel.setVisible(false);
 		usersSuggest.setVisible(false);
-		checkBox.setValue(true);
-		checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+		openForAllCheckBox.setValue(true);
+		openForAllCheckBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				usersLabel.setVisible(!event.getValue());
@@ -190,12 +237,12 @@ public class WorkspaceBlock extends Composite {
 				new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent createEvent) {
-						if (sectionTitle.getText() == null || sectionTitle.getText().isEmpty())
+						if (ClientUtils.isEmpty(sectionTitleTextBox.getText()))
 							return;
 						final Section section = new Section();
-						section.setTitle(sectionTitle.getText());
+						section.setTitle(sectionTitleTextBox.getText());
 						section.setOwner(ConversationManager.getCurrentUser());
-						section.setOpenForAll(checkBox.getValue());
+						section.setOpenForAll(openForAllCheckBox.getValue());
 						if (section.isOpenForAll())
 							section.setUsersWithAccess(users);
 						ConversationManager.addSection(section, new ConversationCallback<Boolean>() {
@@ -203,7 +250,7 @@ public class WorkspaceBlock extends Composite {
 							public void onSuccess(Boolean result) {
 								if (result) {
 									addSectionPopup.hide();
-									sectionTitle.setText("");
+									sectionTitleTextBox.setText("");
 									usersSuggest.setText("");
 									usersPanel.clear();
 									usersPanel.add(usersSuggest);
@@ -217,7 +264,7 @@ public class WorkspaceBlock extends Composite {
 					@Override
 					public void onClick(ClickEvent cancelEvent) {
 						addSectionPopup.hide();
-						sectionTitle.setText("");
+						sectionTitleTextBox.setText("");
 						usersSuggest.setText("");
 						usersPanel.clear();
 						usersPanel.add(usersSuggest);
@@ -227,10 +274,10 @@ public class WorkspaceBlock extends Composite {
 	}
 
 	private void initContentBlock() {
-		final TextBox title = new TextBox();
-		addEntryPopup.addWidget(new Label("entry title"), title);
-		final TextArea content = new TextArea();
-		addEntryPopup.addWidget(new Label("entry content"), content);
+		final TextBox titleTextBox = new TextBox();
+		addEntryPopup.addWidget(new Label("entry title"), titleTextBox);
+		final TextArea contentText = new TextArea();
+		addEntryPopup.addWidget(new Label("entry content"), contentText);
 		final TextBox tagsTextBox = new TextBox();
 		final SuggestBox tagsSuggest = new SuggestBox(new SuggestOracle() {
 			@Override
@@ -281,11 +328,11 @@ public class WorkspaceBlock extends Composite {
 				new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent createEvent) {
-						if (content.getText() == null || content.getText().isEmpty())
+						if (ClientUtils.isEmpty(contentText.getText()))
 							return;
 						final Entry entry = new Entry();
-						entry.setTitle(title.getText());
-						entry.setContent(content.getText());
+						entry.setTitle(titleTextBox.getText());
+						entry.setContent(contentText.getText());
 						entry.setTags(tags);
 						if (currentEntity instanceof Section)
 							entry.setSection((Section) currentEntity);
@@ -294,8 +341,8 @@ public class WorkspaceBlock extends Composite {
 							public void onSuccess(Boolean result) {
 								if (result) {
 									addEntryPopup.hide();
-									title.setText("");
-									content.setText("");
+									titleTextBox.setText("");
+									contentText.setText("");
 									tagsSuggest.setText("");
 									tagsPanel.clear();
 									tagsPanel.add(tagsSuggest);
@@ -309,8 +356,8 @@ public class WorkspaceBlock extends Composite {
 					@Override
 					public void onClick(ClickEvent cancelEvent) {
 						addEntryPopup.hide();
-						title.setText("");
-						content.setText("");
+						titleTextBox.setText("");
+						contentText.setText("");
 						tagsSuggest.setText("");
 						tagsPanel.clear();
 						tagsPanel.add(tagsSuggest);
@@ -484,6 +531,8 @@ public class WorkspaceBlock extends Composite {
 
 	@UiHandler("registerButton")
 	void registerClick(ClickEvent e) {
+		if (ConversationManager.getCurrentUser() == null)
+			addUserPopup.center();
 	}
 
 	@UiHandler("logoutButton")

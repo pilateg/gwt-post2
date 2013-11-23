@@ -58,6 +58,11 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 	}
 
 	@Override
+	public boolean addUser(long sessionId, User user) {
+		return true;
+	}
+
+	@Override
 	public List<Section> fetchSections(long sessionId) {
 		User user = sessions.get(sessionId);
 		if (user != null) {
