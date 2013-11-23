@@ -164,12 +164,21 @@ public class WorkspaceBlock extends Composite {
 						});
 			}
 		}, suggestText);
+		searchSuggest.addKeyDownHandler(new KeyDownHandler() {
+			@Override
+			public void onKeyDown(KeyDownEvent e) {
+				if (e.getNativeKeyCode() == KeyCodes.KEY_ESCAPE)
+					((SuggestBox.DefaultSuggestionDisplay) searchSuggest.getSuggestionDisplay()).hideSuggestions();
+			}
+		});
 		searchSuggest.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 			@Override
 			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
 				selectEntity(((EntitySuggestion) event.getSelectedItem()).entity);
 			}
 		});
+		((SuggestBox.DefaultSuggestionDisplay) searchSuggest.getSuggestionDisplay()).
+				setPopupStyleName(Resources.INSTANCE.css().popup());
 	}
 
 	private void initSectionsBlock() {
