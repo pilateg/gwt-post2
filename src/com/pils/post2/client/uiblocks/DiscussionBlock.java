@@ -29,7 +29,7 @@ public class DiscussionBlock extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				User user = ConversationManager.getCurrentUser();
-				if (user != null && textArea.getText() != null && !textArea.getText().isEmpty()) {
+				if (user != null && !ClientUtils.isEmpty(textArea.getText())) {
 					addComment.setText("adding...");
 					addComment.setEnabled(false);
 					final Comment comment = new Comment();

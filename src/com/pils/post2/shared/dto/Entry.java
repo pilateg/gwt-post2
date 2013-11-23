@@ -1,12 +1,21 @@
 package com.pils.post2.shared.dto;
 
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
+@javax.persistence.Entity
+@Table(name = "ENTRIES")
 public class Entry extends Entity {
 	private String title;
+	@ManyToOne
 	private Section section;
 	private String content;
+	@ManyToMany
 	private List<Tag> tags;
+	@OneToMany
 	private List<Comment> comments;
 
 	@Override

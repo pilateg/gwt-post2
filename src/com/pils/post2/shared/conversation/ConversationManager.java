@@ -3,6 +3,7 @@ package com.pils.post2.shared.conversation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.pils.post2.client.ClientUtils;
 import com.pils.post2.shared.dto.*;
 
 import java.util.Date;
@@ -99,6 +100,10 @@ public class ConversationManager {
 		SERVICE.addSection(sessionId, section, callback);
 	}
 
+	public static void addUser(User user, AsyncCallback<Boolean> callback) {
+		SERVICE.addUser(sessionId, user, callback);
+	}
+
 	public static void fetchSections(AsyncCallback<List<Section>> callback) {
 		SERVICE.fetchSections(sessionId, callback);
 	}
@@ -116,7 +121,7 @@ public class ConversationManager {
 	}
 
 	public static void fetchEntities(Entity parent, String query, int from, int number, AsyncCallback<EntitiesList> callback) {
-		if (query != null && !query.isEmpty())
+		if (!ClientUtils.isEmpty(query))
 			SERVICE.search(sessionId, query, from, number, callback);
 		else if (parent != null)
 			SERVICE.fetchEntities(sessionId, parent, from, number, callback);

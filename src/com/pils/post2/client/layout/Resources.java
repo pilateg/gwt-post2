@@ -22,5 +22,7 @@ public interface Resources extends ClientBundle {
 		String sectionsPanel();
 
 		String breadcrumbPanel();
+
+		String popup();
 	}
 }
