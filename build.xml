@@ -17,6 +17,9 @@
 	<target name="libs" description="Copy libs to WEB-INF/lib">
 		<mkdir dir="${out.dir}/WEB-INF/lib"/>
 		<copy todir="${out.dir}/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar"/>
+		<copy todir="${out.dir}/WEB-INF/lib">
+			<fileset dir="web/WEB-INF/lib"/>
+		</copy>
 	</target>
 
 	<target name="resources" description="Copy resources to WEB-INF/">
