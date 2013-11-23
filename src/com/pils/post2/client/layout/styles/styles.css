@@ -41,3 +41,9 @@ textarea {
 .rightButton {
 	float: right;
 }
+
+.popup {
+	background: backColor;
+	border: borderColor solid 1px;
+	border-radius: 3px;
+}

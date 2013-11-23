@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.pils.post2.client.ClientUtils;
+import com.pils.post2.client.layout.Resources;
 import com.pils.post2.client.layout.widgets.Button;
 import com.pils.post2.shared.conversation.ConversationCallback;
 import com.pils.post2.shared.conversation.ConversationManager;
@@ -192,6 +193,8 @@ public class WorkspaceBlock extends Composite {
 				});
 			}
 		}, usersTextBox);
+		((SuggestBox.DefaultSuggestionDisplay) usersSuggest.getSuggestionDisplay()).
+				setPopupStyleName(Resources.INSTANCE.css().popup());
 		final List<User> users = new ArrayList<User>();
 		final Label usersLabel = new Label("users with access");
 		final FlowPanel usersPanel = new FlowPanel();
@@ -294,6 +297,8 @@ public class WorkspaceBlock extends Composite {
 				});
 			}
 		}, tagsTextBox);
+		((SuggestBox.DefaultSuggestionDisplay) tagsSuggest.getSuggestionDisplay()).
+				setPopupStyleName(Resources.INSTANCE.css().popup());
 		final List<Tag> tags = new ArrayList<Tag>();
 		final FlowPanel tagsPanel = new FlowPanel();
 		tagsPanel.add(tagsSuggest);
