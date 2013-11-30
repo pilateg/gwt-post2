@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Post2" default="war" basedir=".">
+<project name="Post2" default="war" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 	<property file="../post2-build.properties"/>
 
 	<path id="project.class.path">
@@ -14,12 +14,18 @@
 		<delete dir="${out.dir}" failonerror="false"/>
 	</target>
 
-	<target name="libs" description="Copy libs to WEB-INF/lib">
+	<target name="cleanLibs" depends="clean" description="Clean ivy cache">
+		<ivy:cleancache/>
+	</target>
+
+	<target name="resolve" depends="lib" description="Retrieve dependencies">
+		<!--<ivy:retrieve conf="sources" pattern="${out.dir}/WEB-INF/lib/[artifact].[ext]"/>-->
+		<ivy:retrieve conf="binaries" pattern="${out.dir}/WEB-INF/lib/[artifact].[ext]"/>
+	</target>
+
+	<target name="lib" description="Set up WEB-INF/lib">
 		<mkdir dir="${out.dir}/WEB-INF/lib"/>
 		<copy todir="${out.dir}/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar"/>
-		<copy todir="${out.dir}/WEB-INF/lib">
-			<fileset dir="web/WEB-INF/lib"/>
-		</copy>
 	</target>
 
 	<target name="resources" description="Copy resources to WEB-INF/">
@@ -27,7 +33,7 @@
 		<copy todir="${out.dir}" file="web/Post2.html"/>
 	</target>
 
-	<target name="javac" depends="clean, libs, resources" description="Compile java source to bytecode">
+	<target name="javac" depends="clean, resolve, resources" description="Compile java source to bytecode">
 		<mkdir dir="${out.dir}/WEB-INF/classes"/>
 		<javac srcdir="src" includes="**" encoding="utf-8"
 		       destdir="${out.dir}/WEB-INF/classes"

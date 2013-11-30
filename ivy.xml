@@ -1,0 +1,18 @@
+<ivy-module version="2.0">
+	<info organisation="com.pils" module="Post2"/>
+	<configurations>
+		<!--<conf name="sources" description="Source jars"/>-->
+		<conf name="binaries" description="binary jars"/>
+	</configurations>
+	<dependencies>
+		<dependency org="antlr" name="antlr" rev="2.7.7" conf="binaries->default"/>
+		<dependency org="dom4j" name="dom4j" rev="1.6.1" conf="binaries->default"/>
+		<dependency org="org.hibernate" name="hibernate-commons-annotations" rev="3.3.0.ga" conf="binaries->default"/>
+		<dependency org="org.hibernate" name="hibernate-core" rev="4.2.2.Final" conf="binaries->default"/>
+		<dependency org="org.hibernate.javax.persistence" name="hibernate-jpa-2.0-api" rev="1.0.1.Final" conf="binaries->default"/>
+		<dependency org="org.javassist" name="javassist" rev="3.18.1-GA" conf="binaries->default"/>
+		<dependency org="org.jboss.logging" name="jboss-logging" rev="3.1.0.GA" conf="binaries->default"/>
+		<dependency org="javax.transaction" name="jta" rev="1.1" conf="binaries->default"/>
+		<dependency org="javax.validation" name="validation-api" rev="1.0.0.GA" conf="binaries->default"/>
+	</dependencies>
+</ivy-module>
