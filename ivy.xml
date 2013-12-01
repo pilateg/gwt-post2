@@ -10,6 +10,9 @@
 		<dependency org="org.hibernate" name="hibernate-commons-annotations" rev="3.3.0.ga" conf="binaries->default"/>
 		<dependency org="org.hibernate" name="hibernate-core" rev="4.2.2.Final" conf="binaries->default"/>
 		<dependency org="org.hibernate.javax.persistence" name="hibernate-jpa-2.0-api" rev="1.0.1.Final" conf="binaries->default"/>
+		<dependency org="org.hibernate" name="hibernate-entitymanager" rev="4.2.7.SP1" conf="binaries->default"/>
+		<dependency org="javax.enterprise" name="cdi-api" rev="1.1-20130918" conf="binaries->default"/>
+		<dependency org="org.ow2.spec.ee" name="ow2-ejb-3.0-spec" rev="1.0.13" conf="binaries->default"/>
 		<dependency org="org.javassist" name="javassist" rev="3.18.1-GA" conf="binaries->default"/>
 		<dependency org="org.jboss.logging" name="jboss-logging" rev="3.1.0.GA" conf="binaries->default"/>
 		<dependency org="javax.transaction" name="jta" rev="1.1" conf="binaries->default"/>

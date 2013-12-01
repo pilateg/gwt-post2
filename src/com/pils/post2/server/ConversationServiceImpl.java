@@ -3,66 +3,23 @@ package com.pils.post2.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.pils.post2.shared.conversation.ConversationService;
 import com.pils.post2.shared.dto.*;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.security.SecureRandom;
 import java.util.*;
 
 public class ConversationServiceImpl extends RemoteServiceServlet implements ConversationService {
 
-	private static SessionFactory ourSessionFactory;
-	private static ServiceRegistry serviceRegistry;
-
-	public static Session getSession() throws HibernateException {
-		try {
-			Configuration configuration = new Configuration();
-			configuration.configure();
-
-			serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
-			ourSessionFactory = configuration.buildSessionFactory(serviceRegistry);
-		} catch (Throwable ex) {
-			throw new ExceptionInInitializerError(ex);
-		}
-		return ourSessionFactory.openSession();
-	}
-
-	private void test() {
-		final Session session = getSession();
-		try {
-			System.out.println("querying all the managed entities...");
-			final Map metadataMap = session.getSessionFactory().getAllClassMetadata();
-			for (Object key : metadataMap.keySet()) {
-				final ClassMetadata classMetadata = (ClassMetadata) metadataMap.get(key);
-				final String entityName = classMetadata.getEntityName();
-				final Query query = session.createQuery("from " + entityName);
-				System.out.println("executing: " + query.getQueryString());
-				for (Object o : query.list()) {
-					System.out.println("  " + o);
-				}
-			}
-		} finally {
-			session.close();
-		}
-	}
+	@PersistenceContext(name = "post2PU")
+	private EntityManager entityManager;
 
 	private Map<Long, User> sessions = new HashMap<Long, User>();
 
 	public SessionUser login(String name, String password) {
-		User user = null;
-
-		//get user from db
-		if ("name".equals(name) && "pass".equals(password)) {
-			user = new User();
-			user.setName(name);
-		}
-
+		User user = entityManager.createNamedQuery("getUser", User.class)
+				.setParameter("name", name)
+				.setParameter("password", password).getSingleResult();
 		if (user == null)
 			return null;
 		long sessionId = new SecureRandom().nextLong();
