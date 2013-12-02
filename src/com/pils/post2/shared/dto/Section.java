@@ -1,14 +1,11 @@
 package com.pils.post2.shared.dto;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @javax.persistence.Entity
 @Table(name = "SECTIONS")
-@NamedQuery(name = "getSection", query = "select s from Section s where s.title=:title")
+@NamedQuery(name = "getSections", query = "select s from Section s, User u where s.openForAll=true or s.owner.id=:id and u.id=:id and u member of s.usersWithAccess")
 public class Section extends Entity {
 	private String title;
 	@ManyToOne

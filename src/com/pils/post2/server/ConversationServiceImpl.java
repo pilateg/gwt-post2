@@ -43,108 +43,115 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 	}
 
 	@Override
-	public boolean addComment(long sessionId, Comment comment) {
-		return sessions.containsKey(sessionId);
+	public boolean addComment(long sessionId, Comment comment) { //todo checks
+		if (sessions.containsKey(sessionId)) {
+			entityManager.persist(comment);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public boolean addEntry(long sessionId, Entry entry) {
-		return true;
+	public boolean addEntry(long sessionId, Entry entry) { //todo checks
+		if (sessions.containsKey(sessionId)) {
+			entityManager.persist(entry);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public boolean addSection(long sessionId, Section section) {
-		return true;
+	public boolean addSection(long sessionId, Section section) { //todo checks
+		if (sessions.containsKey(sessionId)) {
+			entityManager.persist(section);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public boolean addUser(long sessionId, User user) {
+	public boolean addUser(long sessionId, User user) { //todo checks
+		entityManager.persist(user);
 		return true;
 	}
 
 	@Override
 	public List<Section> fetchSections(long sessionId) {
 		User user = sessions.get(sessionId);
-		if (user != null) {
-			List<Section> sections = new ArrayList<Section>(4);
-			for (int i = 0; i < 4; i++) {
-				Section section = new Section();
-				section.setOwner(user);
-				section.setTitle("section " + i);
-				List<Entry> entries = new ArrayList<Entry>(20);
-				for (int j = 0; j < 20; ++j) {
-					Entry entry = new Entry();
-					entry.setTitle("entry " + j);
-					entry.setSection(section);
-					entry.setContent(section.getTitle() + "<br>blabla" + j);
-					entries.add(entry);
-				}
-				section.setEntries(entries);
-				sections.add(section);
-			}
-			return sections;
-		}
+		if (user != null)
+			return entityManager.createNamedQuery("getSections", Section.class)
+					.setParameter("id", user.getId()).getResultList();
 		return null;
 	}
 
 	@Override
 	public List<User> fetchUsers(long sessionId, String query) {
-		if (!sessions.containsKey(sessionId) || !"name".contains(query))
-			return null;
-		User user = new User();
-		user.setName("name");
-		List<User> users = new ArrayList<User>();
-		users.add(user);
-		return users;
+		if (sessions.containsKey(sessionId))
+			return entityManager.createNamedQuery("getUsers", User.class)
+					.setParameter("query", query).getResultList();
+		return null;
 	}
 
 	@Override
 	public List<Tag> fetchTags(long sessionId, String query) {
-		if (!sessions.containsKey(sessionId) || !"tag".contains(query))
-			return null;
-		Tag tag = new Tag();
-		tag.setTitle("tag");
-		Tag tag2 = new Tag();
-		tag2.setTitle("tag2");
-		List<Tag> tags = new ArrayList<Tag>();
-		tags.add(tag);
-		tags.add(tag2);
-		return tags;
+		if (sessions.containsKey(sessionId))
+			return entityManager.createNamedQuery("getTags", Tag.class)
+					.setParameter("title", query).getResultList();
+		return null;
 	}
 
 	@Override
 	public List<? extends Entity> lightSearch(long sessionId, String query) {
-		return fetchUsers(sessionId, query);
+		List<Entity> entities = new ArrayList<Entity>(4);
+		entities.add(entityManager.createQuery("select e from Tag e where upper(e.title) like upper(:query+'%')", Tag.class).
+				setParameter("query", query).getSingleResult());
+		entities.add(entityManager.createQuery("select e from Section e where upper(e.title) like upper(:query+'%')", Section.class).
+				setParameter("query", query).getSingleResult());
+		entities.add(entityManager.createQuery("select e from Entry e where upper(e.title) like upper(:query+'%')", Entry.class).
+				setParameter("query", query).getSingleResult());
+		entities.add(entityManager.createQuery("select e from User e where upper(e.name) like upper(:query+'%')", User.class).
+				setParameter("query", query).getSingleResult());
+		return entities;
 	}
 
 	@Override
-	public EntitiesList search(long sessionId, String query, long from, long number) {
-		List<User> users = fetchUsers(sessionId, query);
-		return new EntitiesList(users, users.size());
+	public EntitiesList search(long sessionId, String query, int from, int number) { //todo checks, enable hibernate caching
+		List<Entity> entities = new ArrayList<Entity>();
+		entities.addAll(entityManager.createQuery("select e from Tag e where upper(e.title) like upper(:query+'%')", Tag.class).
+				setParameter("query", query).getResultList());
+		entities.addAll(entityManager.createQuery("select e from Section e where upper(e.title) like upper(:query+'%')", Section.class).
+				setParameter("query", query).getResultList());
+		entities.addAll(entityManager.createQuery("select e from Entry e where upper(e.title) like upper(:query+'%')", Entry.class).
+				setParameter("query", query).getResultList());
+		entities.addAll(entityManager.createQuery("select e from User e where upper(e.name) like upper(:query+'%')", User.class).
+				setParameter("query", query).getResultList());
+		return new EntitiesList(entities.subList(from, from + number), entities.size());
 	}
 
 	@Override
-	public EntitiesList fetchEntities(long sessionId, Entity parent, int from, int number) {
-		int itemsNumber = 20;
-		List<Entity> entries = new ArrayList<Entity>(itemsNumber);
-		int to = Math.min(from + number, itemsNumber);
-		for (int i = from; i < to; ++i) {
-			Entry entry = new Entry();
-			entry.setTitle("entry" + i);
-			entry.setContent("<b>" + i + "</b>");
-			final Comment comment = new Comment();
-			comment.setDate(new Date());
-			comment.setContent("blabla" + i);
-			List<Comment> comments = new ArrayList<Comment>();
-			comments.add(comment);
-			entry.setComments(comments);
-			entries.add(entry);
+	public EntitiesList fetchEntities(long sessionId, Entity parent, int from, int number) { //todo checks
+		List<Entity> entities = new ArrayList<Entity>();
+		switch (parent.getType()) {
+			case Entry:
+				entities.addAll(entityManager.createQuery("select c from Comment c where c.entry=:parent", Comment.class).
+						setParameter("parent", parent).getResultList());
+				break;
+			case Tag:
+				entities.addAll(entityManager.createQuery("select e from Entry e where :parent member of e.tags", Entry.class).
+						setParameter("parent", parent).getResultList());
+				break;
+			case Section:
+				entities.addAll(entityManager.createQuery("select e from Entry e where e.section=:parent", Entry.class).
+						setParameter("parent", parent).getResultList());
+				break;
 		}
-		return new EntitiesList(entries, itemsNumber);
+		return new EntitiesList(entities.subList(from, from + number), entities.size());
 	}
 
 	@Override
-	public Entry fetchEntry(long sessionId, long entryId) {
+	public Entry fetchEntry(long sessionId, long entryId) { //todo checks
+		if (sessions.containsKey(sessionId))
+			return entityManager.find(Entry.class, entryId);
 		return null;
 	}
 }

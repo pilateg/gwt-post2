@@ -1,5 +1,6 @@
 package com.pils.post2.shared.dto;
 
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -7,7 +8,9 @@ import java.util.List;
 
 @javax.persistence.Entity
 @Table(name = "USERS")
-@NamedQuery(name = "getUser", query = "select u from User u where u.name=:name and u.password=:password")
+@NamedQueries({
+		@NamedQuery(name = "getUser", query = "select u from User u where u.name=:name and u.password=:password"),
+		@NamedQuery(name = "getUsers", query = "select u from User u where upper(u.name) like upper(:query+'%')")})
 public class User extends Entity {
 	private String name;
 	private String password;

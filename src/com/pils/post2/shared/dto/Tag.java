@@ -5,7 +5,7 @@ import javax.persistence.Table;
 
 @javax.persistence.Entity
 @Table(name = "TAGS")
-@NamedQuery(name = "getTag", query = "select t from Tag t where t.title=:title")
+@NamedQuery(name = "getTags", query = "select t from Tag t where upper(t.title) like upper(:title+'%')")
 public class Tag extends Entity {
 	private String title;
 
