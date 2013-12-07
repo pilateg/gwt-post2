@@ -16,6 +16,7 @@ public class Comment extends Entity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	private String content;
+	@NotNull
 	@ManyToOne
 	private Entry entry;
 

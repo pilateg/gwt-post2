@@ -4,27 +4,20 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.pils.post2.shared.conversation.ConversationService;
 import com.pils.post2.shared.dto.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.security.SecureRandom;
-import java.util.*;
+import javax.ejb.EJB;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ConversationServiceImpl extends RemoteServiceServlet implements ConversationService {
 
-	@PersistenceContext(name = "post2PU")
-	private EntityManager entityManager;
+	@EJB
+	private DtoBean dtoBean;
 
 	private Map<Long, User> sessions = new HashMap<Long, User>();
 
 	public SessionUser login(String name, String password) {
-		User user = entityManager.createNamedQuery("getUser", User.class)
-				.setParameter("name", name)
-				.setParameter("password", password).getSingleResult();
-		if (user == null)
-			return null;
-		long sessionId = new SecureRandom().nextLong();
-		sessions.put(sessionId, user);
-		return new SessionUser(sessionId, user);
+		return dtoBean.login(name, password);
 	}
 
 	@Override
@@ -43,108 +36,79 @@ public class ConversationServiceImpl extends RemoteServiceServlet implements Con
 	}
 
 	@Override
-	public boolean addComment(long sessionId, Comment comment) {
-		return sessions.containsKey(sessionId);
+	public boolean addComment(long sessionId, Comment comment) { //todo checks
+		if (sessions.containsKey(sessionId)) {
+			dtoBean.addEntity(comment);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public boolean addEntry(long sessionId, Entry entry) {
-		return true;
+	public boolean addEntry(long sessionId, Entry entry) { //todo checks
+		if (sessions.containsKey(sessionId)) {
+			dtoBean.addEntity(entry);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public boolean addSection(long sessionId, Section section) {
-		return true;
+	public boolean addSection(long sessionId, Section section) { //todo checks
+		if (sessions.containsKey(sessionId)) {
+			dtoBean.addEntity(section);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public boolean addUser(long sessionId, User user) {
+	public boolean addUser(long sessionId, User user) { //todo checks
+		dtoBean.addEntity(user);
 		return true;
 	}
 
 	@Override
 	public List<Section> fetchSections(long sessionId) {
 		User user = sessions.get(sessionId);
-		if (user != null) {
-			List<Section> sections = new ArrayList<Section>(4);
-			for (int i = 0; i < 4; i++) {
-				Section section = new Section();
-				section.setOwner(user);
-				section.setTitle("section " + i);
-				List<Entry> entries = new ArrayList<Entry>(20);
-				for (int j = 0; j < 20; ++j) {
-					Entry entry = new Entry();
-					entry.setTitle("entry " + j);
-					entry.setSection(section);
-					entry.setContent(section.getTitle() + "<br>blabla" + j);
-					entries.add(entry);
-				}
-				section.setEntries(entries);
-				sections.add(section);
-			}
-			return sections;
-		}
+		if (user != null)
+			return dtoBean.fetchSections(user);
 		return null;
 	}
 
 	@Override
 	public List<User> fetchUsers(long sessionId, String query) {
-		if (!sessions.containsKey(sessionId) || !"name".contains(query))
-			return null;
-		User user = new User();
-		user.setName("name");
-		List<User> users = new ArrayList<User>();
-		users.add(user);
-		return users;
+		if (sessions.containsKey(sessionId))
+			return dtoBean.fetchUsers(query);
+		return null;
 	}
 
 	@Override
 	public List<Tag> fetchTags(long sessionId, String query) {
-		if (!sessions.containsKey(sessionId) || !"tag".contains(query))
-			return null;
-		Tag tag = new Tag();
-		tag.setTitle("tag");
-		Tag tag2 = new Tag();
-		tag2.setTitle("tag2");
-		List<Tag> tags = new ArrayList<Tag>();
-		tags.add(tag);
-		tags.add(tag2);
-		return tags;
+		if (sessions.containsKey(sessionId))
+			return dtoBean.fetchTags(query);
+		return null;
 	}
 
 	@Override
 	public List<? extends Entity> lightSearch(long sessionId, String query) {
-		return fetchUsers(sessionId, query);
+		return dtoBean.lightSearch(query);
 	}
 
 	@Override
-	public EntitiesList search(long sessionId, String query, long from, long number) {
-		List<User> users = fetchUsers(sessionId, query);
-		return new EntitiesList(users, users.size());
+	public EntitiesList search(long sessionId, String query, int from, int number) { //todo checks
+		return dtoBean.search(query, from, number);
 	}
 
 	@Override
-	public EntitiesList fetchEntities(long sessionId, Entity parent, int from, int number) {
-		int itemsNumber = 20;
-		List<Entity> entries = new ArrayList<Entity>(itemsNumber);
-		int to = Math.min(from + number, itemsNumber);
-		for (int i = from; i < to; ++i) {
-			Entry entry = new Entry();
-			entry.setTitle("entry" + i);
-			entry.setContent("<b>" + i + "</b>");
-			final Comment comment = new Comment();
-			comment.setDate(new Date());
-			comment.setContent("blabla" + i);
-			List<Comment> comments = new ArrayList<Comment>();
-			comments.add(comment);
-			entry.setComments(comments);
-			entries.add(entry);
-		}
-		return new EntitiesList(entries, itemsNumber);
+	public EntitiesList fetchEntities(long sessionId, Entity parent, int from, int number) { //todo checks
+		return dtoBean.fetchEntities(parent, from, number);
 	}
 
 	@Override
-	public Entry fetchEntry(long sessionId, long entryId) {
+	public Entry fetchEntry(long sessionId, long entryId) { //todo checks
+		if (sessions.containsKey(sessionId))
+			return dtoBean.fetchEntry(entryId);
 		return null;
 	}
 }

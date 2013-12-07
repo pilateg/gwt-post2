@@ -1,21 +1,23 @@
 package com.pils.post2.shared.dto;
 
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @javax.persistence.Entity
 @Table(name = "ENTRIES")
 public class Entry extends Entity {
+	@NotNull
+	@Column(length = 32)
 	private String title;
+	@NotNull
 	@ManyToOne
 	private Section section;
+	@NotNull
 	private String content;
-	@ManyToMany
+	@ManyToMany//(fetch = FetchType.EAGER)
 	private List<Tag> tags;
-	@OneToMany
+	@OneToMany(mappedBy = "entry", cascade = CascadeType.ALL)//, fetch = FetchType.EAGER)
 	private List<Comment> comments;
 
 	@Override
